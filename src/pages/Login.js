@@ -25,7 +25,7 @@ export default function Login(){
                         <label>SENHA:</label>
                         <input type="password" placeholder="Digite sua senha" class="form-control login-input"/>
                         <a href="#"><p>Esqueceu sua senha?</p></a>
-                        <a href="signup.html"><p>Ainda não se cadastrou? Clique aqui e se torne um Junker</p></a>
+                        <a href="register"><p>Ainda não se cadastrou? Clique aqui e se torne um Junker</p></a>
                         <button type="submit" class="form-control login-button">Entrar</button><br/>
                         </form>
                     </div>

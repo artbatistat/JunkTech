@@ -16,7 +16,7 @@ const PageNavegation = () => {
                 <div class="collapse navbar-collapse" id="myNavbar">
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="help">AJUDA</a></li>
-                    <li><a href="signup">SE TORNE UM JUNKER</a></li>
+                    <li><a href="register">SE TORNE UM JUNKER</a></li>
                     {/* if (login is 'true' { show user of this person } else { show the tab 'LOGIN' }) */}
                     <li><a href="login">LOGIN</a></li>
                 </ul>
