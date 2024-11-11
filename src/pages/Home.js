@@ -6,7 +6,7 @@ import '../js/utils.js'
 
 
 
-export default function Home(){
+export const Home = () => {
     return(
         <>
         <PageNavegation></PageNavegation>

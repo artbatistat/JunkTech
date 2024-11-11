@@ -2,7 +2,7 @@ import PageFooter from "../layout/PageFooter";
 import PageNavegation from "../layout/PageNavegation";
 import './map.css'
 
-export default function Client(){
+export const Client = () => {
     return(
         <>
         <PageNavegation></PageNavegation>

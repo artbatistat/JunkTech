@@ -4,7 +4,7 @@ import PageNavegation from "../layout/PageNavegation";
 
 
 
-export default function NoPage(){
+export const NoPage = () =>{
     return(
         <>
         <PageNavegation></PageNavegation>

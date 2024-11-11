@@ -4,7 +4,7 @@ import PageNavegation from "../layout/PageNavegation";
 
 
 
-export default function Help(){
+export const Help = () => {
     return(
         <>
         <PageNavegation></PageNavegation>
