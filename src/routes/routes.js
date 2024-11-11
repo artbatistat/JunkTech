@@ -4,7 +4,8 @@ import { Home } from '../pages/Home';
 import { Help } from "../pages/Help";
 import { Register } from "../pages/Register";
 import { NoPage } from "../pages/NoPage";
-import { Client } from '../pages/Client';
+import { Client } from '../pages/Client/Client';
+import { PrivateRoutes } from '.';
 
 export const AppRoutes = () =>{
     return (
@@ -15,7 +16,9 @@ export const AppRoutes = () =>{
         <Route path="/Help" element={<Help/>}/>
         <Route path="/Register" element={<Register/>}/>
         <Route path="/Login" element={<Login/>}/>
+        <Route path="/Client" element={<PrivateRoutes/>}>
         <Route path="/Client" element={<Client/>}/>
+         </Route>
         <Route path="*" element={<NoPage/>}/>
         </Routes>
     </BrowserRouter>
