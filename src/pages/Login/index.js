@@ -74,11 +74,6 @@ export const Login = () => {
                     <div class="col-sm-6">
                         <div class="box bg-grey">
                             <h3 style={{padding: "15px"}}>LOGIN</h3>
-                            <div class="row">
-                                <div class="col-sm-3"></div>
-                                <div class="col-sm-3"><input type="radio"/> Cliente</div>
-                                <div class="col-sm-3"><input type="radio"/> Empresa</div>
-                            </div>
                             <form onSubmit={handleSubmit}>
                             <label htmlFor="email">E-MAIL:</label>
                                 <input 
@@ -86,6 +81,7 @@ export const Login = () => {
                                     id="email"
                                     class="form-control login-input"
                                     ref={emailRef}
+                                    placeholder="Digite seu e-mail"
                                     autoComplete="off"
                                     onChange={(e) => setEmail(e.target.value)}
                                     required
@@ -101,7 +97,7 @@ export const Login = () => {
                                     required
                                     aria-invalid={validPwd ? "false" : "true"}
                                 />
-                            <button onClick={loginGoogle} className="signInGoogle">Entrar com google</button>
+                            <a onClick={loginGoogle} className="signInGoogle">Entrar com google</a>
                             <a href="register"><p>Ainda não se cadastrou? Clique aqui e se torne um Junker</p></a>
                             <button type="submit" class="form-control login-button">Entrar</button><br/>
                             </form>

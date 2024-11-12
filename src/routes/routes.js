@@ -6,13 +6,21 @@ import { Register } from "../pages/Register";
 import { NoPage } from "../pages/NoPage";
 import { Client } from '../pages/Client';
 import { PrivateRoutes } from '.';
-import { getIdToken } from 'firebase/auth';
 
 export const AppRoutes = () =>{
 
-    const signed = localStorage.getItem("@AuthFirebase:token",getIdToken)
+    const signed = sessionStorage.getItem("@AuthFirebase:token")
+    let signedStatus = false
 
-    console.log('estou logado?',signed)
+    if(signed == null || signed == ''){
+        signedStatus = false
+    }
+    else{
+        signedStatus = true
+    }
+
+    console.log(`I'm logged: ${signedStatus}`)
+
 
     return (
     <BrowserRouter>
