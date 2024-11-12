@@ -1,4 +1,4 @@
-import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { getAuth, signInWithPopup, GoogleAuthProvider} from "firebase/auth";
 import { app } from "../services/firebaseConfig"
 import { createContext, useEffect, useState } from "react";
 
@@ -13,7 +13,7 @@ export const AuthGoogleProvider = ({children}) => {
 
     useEffect(() => {
         const loadStoreAuth = () =>{
-            const sessionToken = sessionStorage.getItem("@AuthFirebase:token")
+            const sessionToken = sessionStorage.getItem("@AuthFirebase:token") 
             const sessionUser = sessionStorage.getItem("@AuthFirebase:user")
             if(sessionToken && sessionUser){
                 setUser(sessionUser);

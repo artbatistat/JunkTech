@@ -3,11 +3,12 @@ import PageNavegation from "../../layout/PageNavegation";
 import { useRef,useState,useEffect } from "react";
 import { faCheck,faTimes, faInfoCircle} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import axios from '../../api/axios';
+import {auth} from "../../services/firebaseConfig"
+import { createUserWithEmailAndPassword } from "firebase/auth";
 
 
 
-const USER_REGEX = /^[a-zA-Z][a-zA-Z0-9-_]{3,23}$/;
+const EMAIL_REGEX = /^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 const REGISTER_URL = '/register';
 
@@ -15,11 +16,11 @@ const REGISTER_URL = '/register';
 export const Register = () => {
 
     const errRef = useRef();
-    const userRef = useRef();
+    const emailRef = useRef();
 
-    const [user, setUser] = useState('');
+    const [email, setEmail] = useState('');
     const [validName, setValidName] = useState(false);
-    const [userFocus, setUserFocus] = useState(false);
+    const [emailFocus, setEmailFocus] = useState(false);
 
     const [pwd, setPwd] = useState('');
     const [validPwd, setValidPwd] = useState(false);
@@ -33,15 +34,15 @@ export const Register = () => {
     const [success, setSuccess] = useState(false);
 
     useEffect(() => {
-        userRef.current.focus();
+        emailRef.current.focus();
     },[])
 
     useEffect(() => {
-        const result = USER_REGEX.test(user);
+        const result = EMAIL_REGEX.test(email);
         console.log(result);
-        console.log(user);
+        console.log(email);
         setValidName(result);
-    },[user])
+    },[email])
 
     useEffect(() =>{
         const result = PWD_REGEX.test(pwd);
@@ -54,37 +55,23 @@ export const Register = () => {
 
     useEffect(() => {
         setErrMsg('');
-    },[user,pwd,matchPwd])
+    },[email,pwd,matchPwd])
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const v1 = USER_REGEX.test(user);
+        const v1 = EMAIL_REGEX.test(email);
         const v2 = PWD_REGEX.test(pwd);
         if(!v1 || !v2){
             setErrMsg("Invalid Entry");
             return;
         }
         try {
-            const response = await axios.post(REGISTER_URL,
-                JSON.stringify({user,pwd}),
-            {
-                headers: {'Content-Type' : 'application/json'},
-                withCredentials: true
-            }
-        );
-        console.log(response.data);
-        console.log(response.accessToken);
-        console.log(JSON.stringify(response))
-        setSuccess(true);
+
+            await createUserWithEmailAndPassword(auth,email,pwd)
+            console.log("Account created")
+
         }catch (err){
-            if(!err?.response){
-                setErrMsg('No server response');
-            }else if(err.response?.status === 409){
-                setErrMsg('Usuário já existe');
-            }else{
-                setErrMsg('Registration Failed');
-            }
-            errRef.current.focus();
+            console.log(err)
         }
     }
 
@@ -115,29 +102,29 @@ export const Register = () => {
                             <div class="col-sm-3"></div>
                         </div>
                         <div class="row">
-                                <label htmlFor="username">
-                                    USUÁRIO:
+                                <label htmlFor="email">
+                                    E-MAIL:
                                     <span className={validName ? "valid" : "hide"}>
                                         <FontAwesomeIcon icon={faCheck}/>
                                     </span>
-                                    <span className={validName || !user ? "hide" : "invalid"}>
+                                    <span className={validName || !email ? "hide" : "invalid"}>
                                         <FontAwesomeIcon icon={faTimes}/>
                                     </span>
                                 </label>
                                 <input 
-                                    type="text" 
-                                    id="username"
+                                    type="email" 
+                                    id="email"
                                     class="form-control login-input"
-                                    ref={userRef}
+                                    ref={emailRef}
                                     autoComplete="off"
-                                    onChange={(e) => setUser(e.target.value)}
+                                    onChange={(e) => setEmail(e.target.value)}
                                     required
                                     aria-invalid={validName ? "false" : "true"}
                                     aria-describedby="uidnote"
-                                    onFocus={() => setUserFocus(true)}
-                                    onBlur={() => setUserFocus(false)}
+                                    onFocus={() => setEmailFocus(true)}
+                                    onBlur={() => setEmailFocus(false)}
                                     />
-                                <p id="uidnote" className={userFocus && user && !validName ? "instructions" : "offscreen"}>
+                                <p id="uidnote" className={emailFocus && email && !validName ? "instructions" : "offscreen"}>
                                     <FontAwesomeIcon icon={faInfoCircle} />
                                     Precisa conter de 4 à 24 caracteres. <br/>
                                     Deve começar com uma letra. <br/>
@@ -206,7 +193,7 @@ export const Register = () => {
                                 </p>
                                 <br/>
 
-                                <button disabled={!validName || !validPwd || !validMatch ? true : false }>
+                                <button disabled={!validName || !validPwd || !validMatch ? true : false } type="submit">
                                     Registrar
                                 </button>
 
