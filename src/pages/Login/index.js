@@ -49,7 +49,10 @@ export const Login = () => {
                 const user = userCredential.user;
                 const jsonString = JSON.stringify(user);
                 const userLogged = JSON.parse(jsonString)
-                console.log(userLogged)
+                const token = (userLogged["stsTokenManager"]["accessToken"])
+                sessionStorage.setItem("@AuthFirebase:token",token);
+                sessionStorage.setItem("@AuthFirebase:user",JSON.stringify(user));
+
               })
               .catch((error) => {
                 const errorCode = error.code;
