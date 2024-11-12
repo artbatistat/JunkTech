@@ -34,7 +34,7 @@ export const Login = () => {
                             <label>SENHA:</label>
                             <input type="password" placeholder="Digite sua senha" class="form-control login-input"/>
                             <a href="#"><p>Esqueceu sua senha?</p></a>
-                            <button onClick={loginGoogle}>Entrar com google</button>
+                            <button onClick={loginGoogle} className="signInGoogle">Entrar com google</button>
                             <a href="register"><p>Ainda não se cadastrou? Clique aqui e se torne um Junker</p></a>
                             <button type="submit" class="form-control login-button">Entrar</button><br/>
                         </div>

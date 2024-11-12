@@ -4,10 +4,16 @@ import { Home } from '../pages/Home';
 import { Help } from "../pages/Help";
 import { Register } from "../pages/Register";
 import { NoPage } from "../pages/NoPage";
-import { Client } from '../pages/Client/Client';
+import { Client } from '../pages/Client';
 import { PrivateRoutes } from '.';
+import { getIdToken } from 'firebase/auth';
 
 export const AppRoutes = () =>{
+
+    const signed = localStorage.getItem("@AuthFirebase:token",getIdToken)
+
+    console.log('estou logado?',signed)
+
     return (
     <BrowserRouter>
         <Routes>
