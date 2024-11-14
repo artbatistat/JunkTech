@@ -3,13 +3,11 @@ import { Navigate } from "react-router-dom";
 import PageFooter from "../../layout/PageFooter";
 import PageNavegation from "../../layout/PageNavegation";
 import { AuthGoogleContext } from "../../contexts/authGoogle";
-import { EmailAuthCredential, EmailAuthProvider, signInWithEmailAndPassword,getAuth } from "firebase/auth";
+import {signInWithEmailAndPassword} from "firebase/auth";
 import {auth} from "../../services/firebaseConfig"
 
 const EMAIL_REGEX = /^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
-
-const provider = new EmailAuthProvider();
 
 export const Login = () => {
 
@@ -19,18 +17,16 @@ export const Login = () => {
        await signInGoogle();
     }
 
-    const errRef = useRef();
     const emailRef = useRef();
 
     const [email, setEmail] = useState('');
-    const [validName, setValidName] = useState(false);
-    const [emailFocus, setEmailFocus] = useState(false);
+    const [validName] = useState(false);
 
     const [pwd, setPwd] = useState('');
-    const [validPwd, setValidPwd] = useState(false);
-    const [pwdFocus, setPwdFocus] = useState(false);
+    const [validPwd] = useState(false);
 
-    const [errMsg, setErrMsg] = useState('');
+    const [setErrMsg] = useState('');
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         const v1 = EMAIL_REGEX.test(email);
@@ -45,18 +41,16 @@ export const Login = () => {
             console.log("Login successfully")
             signInWithEmailAndPassword(auth, email, pwd)
               .then((userCredential) => {
-                // Signed in 
+
                 const user = userCredential.user;
                 const jsonString = JSON.stringify(user);
                 const userLogged = JSON.parse(jsonString)
                 const token = (userLogged["stsTokenManager"]["accessToken"])
                 sessionStorage.setItem("@AuthFirebase:token",token);
                 sessionStorage.setItem("@AuthFirebase:user",JSON.stringify(user));
-
               })
               .catch((error) => {
-                const errorCode = error.code;
-                const errorMessage = error.message;
+                console.log(error)
               });
 
         }catch (err){

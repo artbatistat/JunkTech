@@ -1,19 +1,25 @@
 import PageFooter from "../../layout/PageFooter";
 import PageNavegation from "../../layout/PageNavegation";
-import { useRef,useState,useEffect } from "react";
+import { useRef,useState,useEffect,useContext } from "react";
 import { faCheck,faTimes, faInfoCircle} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {auth} from "../../services/firebaseConfig"
 import { createUserWithEmailAndPassword } from "firebase/auth";
+import './register.css';
+import { AuthGoogleContext } from "../../contexts/authGoogle";
 
 
 
 const EMAIL_REGEX = /^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
-const REGISTER_URL = '/register';
-
 
 export const Register = () => {
+
+    const {signInGoogle, signed} = useContext(AuthGoogleContext)
+
+    async function loginGoogle(){
+       await signInGoogle();
+    }
 
     const errRef = useRef();
     const emailRef = useRef();
@@ -31,7 +37,7 @@ export const Register = () => {
     const [matchFocus, setMatchFocus] = useState(false);
 
     const [errMsg, setErrMsg] = useState('');
-    const [success, setSuccess] = useState(false);
+    const [success] = useState(false);
 
     useEffect(() => {
         emailRef.current.focus();
@@ -95,12 +101,17 @@ export const Register = () => {
                     <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"} aria-live="assertive">{errMsg}</p>
                         <form onSubmit={handleSubmit}>
                         <h3 style={{padding: "15px"}}>CADASTRO</h3>
-                        <div class="row">
-                            <div class="col-sm-3"></div>
-                            <div class="col-sm-3"><input type="radio"/> Cliente</div>
-                            <div class="col-sm-3"><input type="radio"/> Empresa</div>
-                            <div class="col-sm-3"></div>
-                        </div>
+                        <p>        
+                            <span className="line">
+                                Você já é um Junker? <a href="login">Entrar</a><br/>
+                            </span>
+                        </p>
+                        <p>
+                        <span className="line">
+                                <a onClick={loginGoogle} className="signInGoogle">Cadastrar usando o google</a>
+                            </span>
+                        </p>
+                        <hr style={{width:"40%"}}/>
                         <div class="row">
                                 <label htmlFor="email">
                                     E-MAIL:
@@ -115,6 +126,7 @@ export const Register = () => {
                                     type="email" 
                                     id="email"
                                     class="form-control login-input"
+                                    placeholder="Digite seu e-mail"
                                     ref={emailRef}
                                     autoComplete="off"
                                     onChange={(e) => setEmail(e.target.value)}
@@ -127,10 +139,9 @@ export const Register = () => {
                                 <p id="uidnote" className={emailFocus && email && !validName ? "instructions" : "offscreen"}>
                                     <FontAwesomeIcon icon={faInfoCircle} />
                                     Precisa conter de 4 à 24 caracteres. <br/>
-                                    Deve começar com uma letra. <br/>
+                                    Deve começar com uma letra.<br/>
                                 </p>
-
-
+                                <br/>
                                 <label htmlFor="password">
                                     SENHA:
                                     <span className={validPwd ? "valid" : "hide"}>
@@ -161,9 +172,7 @@ export const Register = () => {
                                     <span aria-label="hashtag">#</span>
                                     <span aria-label="dolar sign">$</span>
                                     <span aria-label="percent">%</span>
-                                </p>
-
-
+                                </p> 
                                 <br/>
                                 <label htmlFor="confirm_pwd">
                                     CONFIRME A SENHA:
@@ -193,16 +202,10 @@ export const Register = () => {
                                 </p>
                                 <br/>
 
-                                <button disabled={!validName || !validPwd || !validMatch ? true : false } type="submit">
+                                <button disabled={!validName || !validPwd || !validMatch ? true : false } type="submit" style={{margin:"10px"}}>
                                     Registrar
                                 </button>
 
-                                <p>
-                                    Você já é um Junker?<br/>
-                                    <span className="line">
-                                        <a href="login">Login</a>
-                                    </span>
-                                </p>
                         </div>
                         </form>
                     </div>

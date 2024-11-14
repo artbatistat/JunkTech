@@ -9,17 +9,7 @@ import { PrivateRoutes } from '.';
 
 export const AppRoutes = () =>{
 
-    const signed = sessionStorage.getItem("@AuthFirebase:token")
-    let signedStatus = false
 
-    if(signed == null || signed == ''){
-        signedStatus = false
-    }
-    else{
-        signedStatus = true
-    }
-
-    console.log(`I'm logged: ${signedStatus}`)
 
 
     return (

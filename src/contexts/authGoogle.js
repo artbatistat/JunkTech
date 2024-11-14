@@ -40,7 +40,7 @@ export const AuthGoogleProvider = ({children}) => {
     };
 
 return(
-    <AuthGoogleContext.Provider value={{signInGoogle, signed: !!user , user}}>
+    <AuthGoogleContext.Provider value={{signInGoogle, signed : !user , user}}>
         {children}
     </AuthGoogleContext.Provider>
 )
