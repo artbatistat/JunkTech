@@ -1,28 +1,89 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
+import { useLoadScript, GoogleMap, Marker, InfoWindow } from "@react-google-maps/api";
 import PageFooter from "../../layout/PageFooter";
 import PageNavegation from "../../layout/PageNavegation";
-import './map.css'
+import './map.css';
 import { AuthGoogleContext } from "../../contexts/authGoogle";
-import { faMapSigns, faShareAltSquare } from "@fortawesome/free-solid-svg-icons";
+
+const markers = [
+  {
+    id: 1,
+    name: "Chicago, Illinois",
+    position: { lat: 41.881832, lng: -87.623177 }
+  },
+  {
+    id: 2,
+    name: "Denver, Colorado",
+    position: { lat: 39.739235, lng: -104.99025 }
+  },
+  {
+    id: 3,
+    name: "Los Angeles, California",
+    position: { lat: 34.052235, lng: -118.243683 }
+  },
+  {
+    id: 4,
+    name: "New York, New York",
+    position: { lat: 40.712776, lng: -74.005974 }
+  }
+];
 
 export const Client = () => {
-    const {user} =  useContext(AuthGoogleContext);
+    const { user } = useContext(AuthGoogleContext);
     const jsonString = JSON.stringify(user);
-    const userLogged = JSON.parse(jsonString)
+    const userLogged = JSON.parse(jsonString);
 
-    console.log(userLogged)
+    const { isLoaded } = useLoadScript({
+        googleMapsApiKey: "AIzaSyAEY2Hu2axCPl8IVCPz9gmglcaK_jGDUW8" // Adicione sua chave de API
+    });
 
-    return(
+    const [activeMarker, setActiveMarker] = useState(null);
+
+    const handleActiveMarker = (marker) => {
+        if (marker === activeMarker) {
+            return;
+        }
+        setActiveMarker(marker);
+    };
+
+    const handleOnLoad = (map) => {
+        const bounds = new window.google.maps.LatLngBounds();
+        markers.forEach(({ position }) => bounds.extend(position));
+        map.fitBounds(bounds);
+    };
+
+    if (!isLoaded) return <div>Carregando...</div>;
+
+    return (
         <>
-        <PageNavegation></PageNavegation>
-        <br/><h1>Client page</h1>
-        <div class="container-fluid">
-            <div class="row">
+            <PageNavegation />
+            <br /><h1>Veja os pontos de coleta na sua região!</h1>
+            <div className="container-fluid">
+                <div className="row">
+                    <div style={{ width: "100vw", height: "100vh" }}>
+                        <GoogleMap
+                            onLoad={handleOnLoad}
+                            onClick={() => setActiveMarker(null)}
+                            mapContainerStyle={{ width: "100%", height: "100%" }}
+                        >
+                            {markers.map(({ id, name, position }) => (
+                                <Marker
+                                    key={id}
+                                    position={position}
+                                    onClick={() => handleActiveMarker(id)}
+                                >
+                                    {activeMarker === id ? (
+                                        <InfoWindow onCloseClick={() => setActiveMarker(null)}>
+                                            <div>{name}</div>
+                                        </InfoWindow>
+                                    ) : null}
+                                </Marker>
+                            ))}
+                        </GoogleMap>
+                    </div>
+                </div>
             </div>
-        </div>
-
-        <PageFooter></PageFooter>
+            <PageFooter />
         </>
-    )
-}
-
+    );
+};
