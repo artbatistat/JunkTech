@@ -1,31 +1,46 @@
+import { GoogleMap, InfoWindow, Marker, useLoadScript } from "@react-google-maps/api";
 import { useContext, useState } from "react";
-import { useLoadScript, GoogleMap, Marker, InfoWindow } from "@react-google-maps/api";
+import { AuthGoogleContext } from "../../contexts/authGoogle";
 import PageFooter from "../../layout/PageFooter";
 import PageNavegation from "../../layout/PageNavegation";
 import './map.css';
-import { AuthGoogleContext } from "../../contexts/authGoogle";
 
 const markers = [
-  {
-    id: 1,
-    name: "Chicago, Illinois",
-    position: { lat: 41.881832, lng: -87.623177 }
-  },
-  {
-    id: 2,
-    name: "Denver, Colorado",
-    position: { lat: 39.739235, lng: -104.99025 }
-  },
-  {
-    id: 3,
-    name: "Los Angeles, California",
-    position: { lat: 34.052235, lng: -118.243683 }
-  },
-  {
-    id: 4,
-    name: "New York, New York",
-    position: { lat: 40.712776, lng: -74.005974 }
-  }
+    {
+        id: 1,
+        name: "Emile",
+        position: { lat: -19.993362, lng: -44.181484 },
+        address: "Endereço 1",
+        phone: "31 9 3276-2947"
+    },
+    {
+        id: 2,
+        name: "Br Ambiental",
+        position: { lat: -19.962945, lng: -44.138216 },
+        address: "Endereço 2",
+        phone: "31 9 3276-2947"
+    },
+    {
+        id: 3,
+        name: "Bh Recicla",
+        position: { lat: -19.957054, lng: -44.034900 },
+        address: "Endereço 3",
+        phone: "31 9 3276-2947"
+    },
+    {
+        id: 4,
+        name: "MG Recicla",
+        position: { lat: -19.940838, lng: -44.001605 },
+        address: "Endereço 4",
+        phone: "31 9 3276-2947"
+    },
+    {
+        id: 5,
+        name: "Coletar Reciclagem",
+        position: { lat: -19.929466, lng: -44.054793},
+        address: "Endereço 4",
+        phone: "31 9 3276-2947"
+    }
 ];
 
 export const Client = () => {
@@ -34,7 +49,7 @@ export const Client = () => {
     const userLogged = JSON.parse(jsonString);
 
     const { isLoaded } = useLoadScript({
-        googleMapsApiKey: "AIzaSyAEY2Hu2axCPl8IVCPz9gmglcaK_jGDUW8" // Adicione sua chave de API
+        googleMapsApiKey: "AIzaSyAEY2Hu2axCPl8IVCPz9gmglcaK_jGDUW8"
     });
 
     const [activeMarker, setActiveMarker] = useState(null);
@@ -57,29 +72,43 @@ export const Client = () => {
     return (
         <>
             <PageNavegation />
-            <br /><h1>Veja os pontos de coleta na sua região!</h1>
+            <h1 className="title">Veja os pontos de coleta na sua região!</h1>
             <div className="container-fluid">
                 <div className="row">
-                    <div style={{ width: "100vw", height: "100vh" }}>
-                        <GoogleMap
-                            onLoad={handleOnLoad}
-                            onClick={() => setActiveMarker(null)}
-                            mapContainerStyle={{ width: "100%", height: "100%" }}
-                        >
-                            {markers.map(({ id, name, position }) => (
-                                <Marker
-                                    key={id}
-                                    position={position}
-                                    onClick={() => handleActiveMarker(id)}
-                                >
-                                    {activeMarker === id ? (
-                                        <InfoWindow onCloseClick={() => setActiveMarker(null)}>
-                                            <div>{name}</div>
-                                        </InfoWindow>
-                                    ) : null}
-                                </Marker>
-                            ))}
-                        </GoogleMap>
+                    <div className="map">
+                        <div style={{ width: "50vw", height: "50vh" }}>
+                            <GoogleMap
+                                onLoad={handleOnLoad}
+                                onClick={() => setActiveMarker(null)}
+                                mapContainerStyle={{ width: "100%", height: "100%" }}
+                            >
+                                {markers.map(({ id, name, position }) => (
+                                    <Marker
+                                        key={id}
+                                        position={position}
+                                        onClick={() => handleActiveMarker(id)}
+                                    >
+                                        {activeMarker === id ? (
+                                            <InfoWindow onCloseClick={() => setActiveMarker(null)}>
+                                                <div>{name}</div>
+                                            </InfoWindow>
+                                        ) : null}
+                                    </Marker>
+                                ))}
+                            </GoogleMap>
+                        </div>
+                    </div>
+                </div>
+                <div className="collection-points">
+                    <h2>Detalhes dos Pontos de Coleta</h2>
+                    <div className="points-flex">
+                        {markers.map(({ id, name, address, phone }) => (
+                            <div key={id} className="collection-point">
+                                <h3>{name}</h3> <br />
+                                <p><strong>Endereço: </strong> <br /> {address}</p>
+                                <p><strong>Telefone:</strong><br /> {phone}</p>
+                            </div>
+                        ))}
                     </div>
                 </div>
             </div>
