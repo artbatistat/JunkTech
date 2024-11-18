@@ -1,16 +1,17 @@
-import {BrowserRouter, Routes, Route} from 'react-router-dom';
 import './style.css';
 import { AppRoutes } from './routes/routes';
-import { AuthGoogleProvider } from './contexts/authGoogle';
+import {AuthEmailProvider } from './contexts/authEmail';
+import { useEffect } from 'react';
 
 
 function App() {
+
   return (
   <>
    (
-    <AuthGoogleProvider>
+    <AuthEmailProvider>
     <AppRoutes/>
-    </AuthGoogleProvider>
+    </AuthEmailProvider>
     )
   </>
   );

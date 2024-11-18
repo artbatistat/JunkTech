@@ -2,20 +2,14 @@ import { useContext, useRef,useState } from "react";
 import { Navigate } from "react-router-dom";
 import PageFooter from "../../layout/PageFooter";
 import PageNavegation from "../../layout/PageNavegation";
-import { AuthGoogleContext } from "../../contexts/authGoogle";
-import {signInWithEmailAndPassword} from "firebase/auth";
-import {auth} from "../../services/firebaseConfig"
+import { AuthEmailContext } from "../../contexts/authEmail";
 
 const EMAIL_REGEX = /^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 
 export const Login = () => {
 
-    const {signInGoogle, signed} = useContext(AuthGoogleContext)
-
-    async function loginGoogle(){
-       await signInGoogle();
-    }
+    const {signInEmail, signed} = useContext(AuthEmailContext);
 
     const emailRef = useRef();
 
@@ -29,29 +23,15 @@ export const Login = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const v1 = EMAIL_REGEX.test(email);
-        const v2 = PWD_REGEX.test(pwd);
-        if(!v1 || !v2){
+        const isValidEmail  = EMAIL_REGEX.test(email);
+        const isValidPassword  = PWD_REGEX.test(pwd);
+        if(!isValidEmail || !isValidPassword){
             setErrMsg("Invalid Entry");
             return;
         }
         try {
 
-            await signInWithEmailAndPassword(auth,email,pwd)
-            console.log("Login successfully")
-            signInWithEmailAndPassword(auth, email, pwd)
-              .then((userCredential) => {
-
-                const user = userCredential.user;
-                const jsonString = JSON.stringify(user);
-                const userLogged = JSON.parse(jsonString)
-                const token = (userLogged["stsTokenManager"]["accessToken"])
-                sessionStorage.setItem("@AuthFirebase:token",token);
-                sessionStorage.setItem("@AuthFirebase:user",JSON.stringify(user));
-              })
-              .catch((error) => {
-                console.log(error)
-              });
+           await signInEmail(email,pwd)
 
         }catch (err){
             console.log(err)
@@ -91,7 +71,6 @@ export const Login = () => {
                                     required
                                     aria-invalid={validPwd ? "false" : "true"}
                                 />
-                            <a onClick={loginGoogle} className="signInGoogle">Entrar com google</a>
                             <a href="register"><p>Ainda não se cadastrou? Clique aqui e se torne um Junker</p></a>
                             <button type="submit" class="form-control login-button">Entrar</button><br/>
                             </form>
@@ -105,7 +84,7 @@ export const Login = () => {
         )
     }
     else{
-        return <Navigate to="/Client"/>;
+        return <Navigate to="/Client" />;
     }
     
 }

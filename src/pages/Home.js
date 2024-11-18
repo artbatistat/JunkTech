@@ -1,5 +1,5 @@
-import PageFooter from "../layout/PageFooter";
-import PageNavegation from "../layout/PageNavegation";
+import PageFooter from "../layout/PageFooter.js";
+import PageNavegation from "../layout/PageNavegation.js";
 import img_ewaste from '../img/ewaste.png'
 import '../js/utils.js'
 

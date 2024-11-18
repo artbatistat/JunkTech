@@ -1,6 +1,14 @@
-import React from "react";
+import {React, useContext} from "react";
+import { AuthEmailContext } from "../contexts/authEmail";
+
 
 const PageNavegation = () => {
+
+    const {signed} = useContext(AuthEmailContext)
+
+    console.log(`Signed: ${signed}`)
+
+
     return (
         <>
         <nav class="navbar navbar-default navbar-fixed-top">
@@ -18,7 +26,12 @@ const PageNavegation = () => {
                     <li><a href="help">AJUDA</a></li>
                     <li><a href="register">SE TORNE UM JUNKER</a></li>
                     {/* if (login is 'true' { show user of this person } else { show the tab 'LOGIN' }) */}
-                    <li><a href="login">LOGIN</a></li>
+                    {!signed && (
+                    <li><a href="login" className="login">LOGIN</a></li>
+                    )}   
+                    {signed && (
+                    <li><a href="profile" className="profile">PROFILE</a></li>
+                    )}           
                 </ul>
                 </div>
             </div>

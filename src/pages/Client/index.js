@@ -2,15 +2,9 @@ import { useContext } from "react";
 import PageFooter from "../../layout/PageFooter";
 import PageNavegation from "../../layout/PageNavegation";
 import './map.css'
-import { AuthGoogleContext } from "../../contexts/authGoogle";
-import { faMapSigns, faShareAltSquare } from "@fortawesome/free-solid-svg-icons";
+import { AuthEmailContext } from "../../contexts/authEmail";
 
 export const Client = () => {
-    const {user} =  useContext(AuthGoogleContext);
-    const jsonString = JSON.stringify(user);
-    const userLogged = JSON.parse(jsonString)
-
-    console.log(userLogged)
 
     return(
         <>
