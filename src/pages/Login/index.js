@@ -15,6 +15,31 @@ export const Login = () => {
     const [pwd, setPwd] = useState('');
     const [errMsg, setErrMsg] = useState('');
 
+    const teste123 = async(e) =>{
+        e.preventDefault();
+        console.log(JSON.stringify({ username: email, password: pwd , user_type : 1}))
+
+        try {
+            const response = await fetch("http://junktech.vercel.app/signin", {
+                method: "POST",
+                mode: "no-cors",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ username: email, password: pwd , user_type : 1}),
+            });
+    
+            if (!response.ok) {
+                throw new Error("Erro ao autenticar");
+            }
+    
+            const data = await response.json();
+            console.log("Resposta da API:", data);
+        } catch (err) {
+            console.error("Erro:", err.message);
+        }
+    }
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         const isValidEmail = EMAIL_REGEX.test(email);
@@ -77,6 +102,7 @@ export const Login = () => {
                                 <button type="submit" className="form-control login-button">
                                     Entrar
                                 </button>
+                                <a onClick={teste123}>teste</a>
                                 <br />
                             </form>
                         </div>
