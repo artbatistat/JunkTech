@@ -5,11 +5,13 @@ import { Help } from "../pages/Help";
 import { Register } from "../pages/Register";
 import { NoPage } from "../pages/NoPage";
 import { Client } from '../pages/Client';
-import { PrivateRoutes } from './index';
+import { Profile } from '../pages/Profile';
+import { PrivateRoutes } from '.';
 
 export const AppRoutes = () =>{
 
     return (
+    
     <BrowserRouter>
         <Routes>
         <Route index element={<Home/>}/>
@@ -17,14 +19,11 @@ export const AppRoutes = () =>{
         <Route path="/Help" element={<Help/>}/>
         <Route path="/Register" element={<Register/>}/>
         <Route path="/Login" element={<Login/>}/>
-        <Route path="/Client" element={
-        <PrivateRoutes>
-            <Client/> 
-        </PrivateRoutes>
-        } 
-        />
+        <Route path="/Profile" element={<PrivateRoutes> <Profile/> </PrivateRoutes>} />
+        <Route path="/Client" element={<PrivateRoutes> <Client/> </PrivateRoutes>} />
         <Route path="*" element={<NoPage/>}/>
         </Routes>
     </BrowserRouter>
+    
     )
 };

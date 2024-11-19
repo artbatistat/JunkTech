@@ -1,13 +1,9 @@
 import {React, useContext} from "react";
 import { AuthEmailContext } from "../contexts/authEmail";
 
-
 const PageNavegation = () => {
 
-    const {signed} = useContext(AuthEmailContext)
-
-    console.log(`Signed: ${signed}`)
-
+    const {signed,signOutEmail} = useContext(AuthEmailContext)
 
     return (
         <>
@@ -24,20 +20,21 @@ const PageNavegation = () => {
                 <div class="collapse navbar-collapse" id="myNavbar">
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="help">AJUDA</a></li>
-                    <li><a href="register">SE TORNE UM JUNKER</a></li>
-                    {/* if (login is 'true' { show user of this person } else { show the tab 'LOGIN' }) */}
-                    {!signed && (
-                    <li><a href="login" className="login">LOGIN</a></li>
-                    )}   
-                    {signed && (
-                    <li><a href="profile" className="profile">PROFILE</a></li>
-                    )}           
+                    {/*SIGNED STATUS : NO */}
+                    {!signed && ( <li><a href="register">SE TORNE UM JUNKER</a></li>)}
+                    {!signed && (<li><a href="login" className="login">LOGIN</a></li>)}
+
+                    {/*SIGNED STATUS : YES */}
+                    {signed && (<li><a href="client" className="client">CLIENTE</a></li>)}     
+                    {signed && (<li><a href="profile" className="profile">PROFILE</a></li>)}     
+                    {signed && (<li><a onClick={signOutEmail} className="logout">LOGOUT</a></li>)} 
                 </ul>
                 </div>
             </div>
         </nav>
         </>
     );
+    
 };
 
 export default PageNavegation;

@@ -1,6 +1,6 @@
 import { getAuth, signInWithEmailAndPassword} from "firebase/auth";
 import { app } from "../services/firebaseConfig";
-import { useEffect, useState,createContext, useContext } from "react";
+import { useEffect, useState,createContext} from "react";
 
 export const AuthEmailContext = createContext({})
 
@@ -8,17 +8,10 @@ export const AuthEmailProvider = ({children}) => {
 
 const auth = getAuth(app);
 const [user,setUser] = useState(null);
-const [signed, setSigned] = useState(false);
-
-useEffect(() => {
-    const loadStoreAuth = () =>{
-        const sessionToken = sessionStorage.getItem("@AuthFirebase:token") 
-        const sessionUser = sessionStorage.getItem("@AuthFirebase:user")
-        if(sessionToken && sessionUser){
-            setUser(sessionUser);
-        }
-    }
-})
+const [signed, setSigned] = useState(() => {
+  const storedValue = sessionStorage.getItem("signed");
+  return storedValue === "true";
+});
 
 useEffect(() => {
   const sessionUser = sessionStorage.getItem("@AuthFirebase:user");
@@ -28,7 +21,7 @@ useEffect(() => {
   }
 }, []);
 
-    const signInEmail = (email,pwd) =>{
+    const signInEmail = async (email,pwd) =>{
 
         signInWithEmailAndPassword(auth, email, pwd)
               .then((userCredential) => {
@@ -40,18 +33,28 @@ useEffect(() => {
                 const token = (userLogged["stsTokenManager"]["accessToken"])
                 sessionStorage.setItem("@AuthFirebase:token",token);
                 sessionStorage.setItem("@AuthFirebase:user",JSON.stringify(user));
+                sessionStorage.setItem("signed", "true");
+                setSigned(true);
               })
               .catch((error) => {
                 console.log(error)
-                const errorCode = error.code;
-                const errorMessage = error.message;
-                const email = error.customData.email;
               });
 
     };
 
+    const signOutEmail = () => {
+      sessionStorage.removeItem("@AuthFirebase:token");
+      sessionStorage.removeItem("@AuthFirebase:user");
+      sessionStorage.removeItem("signed");
+      setSigned(false);
+  };
+
+  useEffect(() => {
+    console.log("Signed atualizado no Context:", signed);
+}, [signed]);
+
     return (
-        <AuthEmailContext.Provider value={{ signInEmail, signed,setSigned}}>
+        <AuthEmailContext.Provider value={{ signInEmail, signOutEmail ,signed}}>
           {children}
         </AuthEmailContext.Provider>
       )

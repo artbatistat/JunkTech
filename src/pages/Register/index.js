@@ -1,12 +1,12 @@
 import PageFooter from "../../layout/PageFooter";
 import PageNavegation from "../../layout/PageNavegation";
-import { useRef,useState,useEffect,useContext } from "react";
+import { useRef,useState,useEffect} from "react";
 import { faCheck,faTimes, faInfoCircle} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {auth} from "../../services/firebaseConfig"
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import './register.css';
-import { AuthGoogleContext } from "../../contexts/authGoogle";
+import { useNavigate } from "react-router-dom";
 
 
 
@@ -15,12 +15,7 @@ const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 
 export const Register = () => {
 
-    const {signInGoogle, signed} = useContext(AuthGoogleContext)
-
-    async function loginGoogle(){
-       await signInGoogle();
-    }
-
+    const navigate = useNavigate();
     const errRef = useRef();
     const emailRef = useRef();
 
@@ -35,9 +30,9 @@ export const Register = () => {
     const [matchPwd, setMatchPwd] = useState('');
     const [validMatch, setValidMatch] = useState(false);
     const [matchFocus, setMatchFocus] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const [errMsg, setErrMsg] = useState('');
-    const [success] = useState(false);
 
     useEffect(() => {
         emailRef.current.focus();
@@ -65,33 +60,29 @@ export const Register = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);
         const v1 = EMAIL_REGEX.test(email);
         const v2 = PWD_REGEX.test(pwd);
         if(!v1 || !v2){
-            setErrMsg("Invalid Entry");
+            setErrMsg("Verifique os dados informados.");
             return;
         }
         try {
 
             await createUserWithEmailAndPassword(auth,email,pwd)
-            console.log("Account created")
+            console.log("Account created");
+            navigate("/Login")
 
         }catch (err){
             console.log(err)
+            setErrMsg("Falha ao criar conta. Tente novamente.");
+        } finally {
+            setLoading(false);
         }
     }
 
     return(
         <>
-        {success ? (
-            <section>
-                <h1>Success!</h1>
-                <p>
-                    <a href="#"> Sign in </a>
-                </p>
-            </section>
-        ) : (
-<section>
         <PageNavegation></PageNavegation>
         <div class="container-fluid">
             <div class="row">
@@ -104,11 +95,6 @@ export const Register = () => {
                         <p>        
                             <span className="line">
                                 Você já é um Junker? <a href="login">Entrar</a><br/>
-                            </span>
-                        </p>
-                        <p>
-                        <span className="line">
-                                <a onClick={loginGoogle} className="signInGoogle">Cadastrar usando o google</a>
                             </span>
                         </p>
                         <hr style={{width:"40%"}}/>
@@ -202,8 +188,8 @@ export const Register = () => {
                                 </p>
                                 <br/>
 
-                                <button disabled={!validName || !validPwd || !validMatch ? true : false } type="submit" style={{margin:"10px"}}>
-                                    Registrar
+                                <button disabled={loading || !validName || !validPwd || !validMatch}>
+                                    {loading ? "Carregando..." : "Registrar"}
                                 </button>
 
                         </div>
@@ -214,9 +200,6 @@ export const Register = () => {
             </div>
         </div>
         <PageFooter></PageFooter>
-</section>
-        )}
-
         </>
     )
 }
