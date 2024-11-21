@@ -42,11 +42,44 @@ useEffect(() => {
 
     };
 
-    const signOutEmail = () => {
-      sessionStorage.removeItem("@AuthFirebase:token");
-      sessionStorage.removeItem("@AuthFirebase:user");
-      sessionStorage.removeItem("signed");
-      setSigned(false);
+const signInEmailHTTP = async (email,pwd) =>{
+
+  try{
+      var data = JSON.stringify({
+        email: email,
+        password: pwd,
+        user_type: 1
+      })
+
+      const response = await fetch('http://cors-anywhere.herokuapp.com/http://junktech.vercel.app/signin', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: data
+      });
+
+      if(!response.ok){
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const token = await response.json();
+      alert(JSON.stringify(token));
+      sessionStorage.setItem("@AuthFirebase:token",token);
+      sessionStorage.setItem("signed", "true");
+      setSigned(true);
+  }catch(error){
+    console.log(error)
+  }
+
+    };
+
+
+      const signOutEmail = () => {
+        sessionStorage.removeItem("@AuthFirebase:token");
+        sessionStorage.removeItem("@AuthFirebase:user");
+        sessionStorage.removeItem("signed");
+        setSigned(false);
   };
 
   useEffect(() => {
@@ -54,7 +87,7 @@ useEffect(() => {
 }, [signed]);
 
     return (
-        <AuthEmailContext.Provider value={{ signInEmail, signOutEmail ,signed}}>
+        <AuthEmailContext.Provider value={{ signInEmailHTTP, signInEmail, signOutEmail ,signed}}>
           {children}
         </AuthEmailContext.Provider>
       )
