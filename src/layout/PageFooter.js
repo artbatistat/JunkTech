@@ -1,7 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import "../js/utils"
+import { AuthEmailContext } from "../contexts/authEmail";
 
 const PageFooter = () => {
+
+    const {signed} = useContext(AuthEmailContext)
+
     return (
         <>
         <footer class="container-fluid text-center">
@@ -22,8 +26,13 @@ const PageFooter = () => {
                     }}/>
                     <a href="index.html"><p>Home</p></a>
                     <a href="help.html"><p>Ajuda</p></a>
-                    <a href="signup.html"><p>Seja um Junker</p></a>
-                    <a href="login.html"><p>Login</p></a>
+                    {/*SIGNED STATUS : NO */}
+                    {!signed && (<a href="register"><p>Se torne um Junker</p></a>)}
+                    {!signed && (<a href="login" className="login"><p>Login</p></a>)}
+
+                    {/*SIGNED STATUS : YES */}
+                    {signed && (<a href="client" className="client"><p>Cliente</p></a>)}     
+                    {signed && (<a href="profile" className="profile"><p>Profile</p></a>)}     
                 </div>
                 <div class="col-sm-4">
                     <b>Siga-nos</b>

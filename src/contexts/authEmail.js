@@ -116,7 +116,7 @@ const signOutEmail = () => {
 
 
 return (
-  <AuthEmailContext.Provider value={{ signInEmailHTTP, signOutEmail , registerUserEmailHTTP, signed, errMsgPOST , errHTTP }}>
+  <AuthEmailContext.Provider value={{ signInEmailHTTP, signOutEmail , registerUserEmailHTTP, signed, errMsgPOST , errHTTP , user}}>
     {children}
   </AuthEmailContext.Provider>
 )};
