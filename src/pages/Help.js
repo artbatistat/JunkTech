@@ -1,9 +1,6 @@
 import PageFooter from "../layout/PageFooter";
 import PageNavegation from "../layout/PageNavegation";
-
-
-
-
+    
 export const Help = () => {
     return(
         <>
