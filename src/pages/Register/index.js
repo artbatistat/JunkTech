@@ -1,19 +1,19 @@
 import PageFooter from "../../layout/PageFooter";
 import PageNavegation from "../../layout/PageNavegation";
-import { useRef,useState,useEffect} from "react";
+import { useRef, useState, useEffect, useContext} from "react";
 import { faCheck,faTimes, faInfoCircle} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {auth} from "../../services/firebaseConfig"
-import { createUserWithEmailAndPassword } from "firebase/auth";
 import './register.css';
 import { useNavigate } from "react-router-dom";
-
-
+import { AuthEmailContext } from "../../contexts/authEmail";
 
 const EMAIL_REGEX = /^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
+const USERNAME_REGEX = /^[a-zA-Z0-9.]+$/;
 
 export const Register = () => {
+
+    const { registerUserEmailHTTP, errMsgPOST, errHTTP} = useContext(AuthEmailContext);
 
     const navigate = useNavigate();
     const errRef = useRef();
@@ -30,8 +30,12 @@ export const Register = () => {
     const [matchPwd, setMatchPwd] = useState('');
     const [validMatch, setValidMatch] = useState(false);
     const [matchFocus, setMatchFocus] = useState(false);
-    const [loading, setLoading] = useState(false);
 
+    const [username, setUsername] = useState('');
+    const [validUsername, setValidUsername] = useState(false);
+    const [usernameFocus, setUsernameFocus] = useState(false);
+
+    const [loading, setLoading] = useState(false);
     const [errMsg, setErrMsg] = useState('');
 
     useEffect(() => {
@@ -40,46 +44,54 @@ export const Register = () => {
 
     useEffect(() => {
         const result = EMAIL_REGEX.test(email);
-        console.log(result);
-        console.log(email);
         setValidName(result);
     },[email])
 
     useEffect(() =>{
         const result = PWD_REGEX.test(pwd);
-        console.log(result);
-        console.log(pwd);
         setValidPwd(result);
         const match = pwd === matchPwd;
         setValidMatch(match);
     },[pwd,matchPwd])
 
+    useEffect(() =>{
+        const result = USERNAME_REGEX.test(username);
+        setValidUsername(result);
+    },[username])
+
     useEffect(() => {
         setErrMsg('');
-    },[email,pwd,matchPwd])
+    },[email,pwd,matchPwd,username])
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
+
         const v1 = EMAIL_REGEX.test(email);
         const v2 = PWD_REGEX.test(pwd);
+
         if(!v1 || !v2){
             setErrMsg("Verifique os dados informados.");
             return;
-        }
-        try {
+        }else{
 
-            await createUserWithEmailAndPassword(auth,email,pwd)
-            console.log("Account created");
-            navigate("/Login")
-
-        }catch (err){
-            console.log(err)
-            setErrMsg("Falha ao criar conta. Tente novamente.");
-        } finally {
-            setLoading(false);
+            try {
+                await registerUserEmailHTTP(email,pwd,username)   
+            }catch (err){
+                setErrMsg("Falha ao criar conta. Tente novamente.");
+                console.log(err)
+            } finally {
+                setLoading(false);
+            }
         }
+        
+       
     }
+
+    if(errHTTP){
+            navigate("/Login")
+        }
+    
 
     return(
         <>
@@ -89,7 +101,6 @@ export const Register = () => {
                 <div class="col-sm-3"></div>
                 <div class="col-sm-6">
                     <div class="box bg-grey">
-                    <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"} aria-live="assertive">{errMsg}</p>
                         <form onSubmit={handleSubmit}>
                         <h3 style={{padding: "15px"}}>CADASTRO</h3>
                         <p>        
@@ -98,6 +109,8 @@ export const Register = () => {
                             </span>
                         </p>
                         <hr style={{width:"40%"}}/>
+                        <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"} aria-live="assertive">{errMsg}</p>
+                        {errMsgPOST && <p style={{ color: "red" }}>{errMsgPOST}</p>}
                         <div class="row">
                                 <label htmlFor="email">
                                     E-MAIL:
@@ -128,6 +141,35 @@ export const Register = () => {
                                     Deve começar com uma letra.<br/>
                                 </p>
                                 <br/>
+
+                                <label htmlFor="username">
+                                    USUÁRIO:
+                                    <span className={validUsername ? "valid" : "hide"}>
+                                        <FontAwesomeIcon icon={faCheck}/>
+                                    </span>
+                                    <span className={validUsername || !username ? "hide" : "invalid"}>
+                                        <FontAwesomeIcon icon={faTimes}/>
+                                    </span>
+                                </label>
+                                <input 
+                                    type="username" 
+                                    id="username"
+                                    class="form-control login-input"
+                                    placeholder="Digite seu usuário"
+                                    autoComplete="off"
+                                    onChange={(e) => setUsername(e.target.value)}
+                                    required
+                                    aria-describedby="usernamenote"
+                                    onFocus={() => setUsernameFocus(true)}
+                                    onBlur={() => setUsernameFocus(false)}
+                                    />
+                                <br/>
+                                <p id="usernamenote" className={usernameFocus && !validUsername ? "instructions" : "offscreen"}>
+                                    <FontAwesomeIcon icon={faInfoCircle}/>
+                                    O usúario não pode conter caracteres especiais além do ".". <br/>
+                                </p>
+
+
                                 <label htmlFor="password">
                                     SENHA:
                                     <span className={validPwd ? "valid" : "hide"}>
@@ -188,7 +230,7 @@ export const Register = () => {
                                 </p>
                                 <br/>
 
-                                <button disabled={loading || !validName || !validPwd || !validMatch}>
+                                <button disabled={loading || !validName || !validPwd || !validMatch || !validUsername}>
                                     {loading ? "Carregando..." : "Registrar"}
                                 </button>
 
