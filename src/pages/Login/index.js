@@ -15,10 +15,13 @@ export const Login = () => {
     const [email, setEmail] = useState('');
     const [pwd, setPwd] = useState('');
     const [validPwd, setValidPwd] = useState(false);
-    const [errMsg, setErrMsg] = useState('');
-    const [loading, setLoading] = useState(false);
     const [checkPwd,setCheckPwd] = useState(false);
     const [checkFocus, setCheckFocus] = useState(false);
+    const [userType, setUserType] = useState(null);
+
+    const [errMsg, setErrMsg] = useState('');
+    const [loading, setLoading] = useState(false);
+
 
     useEffect(() =>{
         const result = PWD_REGEX.test(pwd);;
@@ -31,7 +34,7 @@ export const Login = () => {
     },[pwd])
 
     const handleSubmit = async (e) => {
-        if(!validPwd || !"pedrolara123@"){
+        if(!validPwd){
             setErrMsg("Senha inválida. Tente novamente.");
             e.preventDefault();
         }else{
@@ -66,6 +69,33 @@ export const Login = () => {
                             {errMsgPOST && <p style={{ color: "red" }}>{errMsgPOST}</p>}
                             {errMsg && !validPwd &&<p style={{ color: "red" }}>{errMsg}</p>}
                             <form>
+                            <div className="row">
+                                <div className="col-sm-6">
+                                    <input
+                                    type="radio"
+                                    id="client"
+                                    name="user_type"
+                                    className="radiobox"
+                                    value={0}
+                                    onChange={(e) => setUserType(parseInt(e.target.value, 10))}
+                                    required
+                                    />
+                                    <label htmlFor="client">Cliente</label>
+                                </div>
+                                <div className="col-sm-6">
+                                    <input
+                                    type="radio"
+                                    id="enterprise"
+                                    name="user_type"
+                                    className="radiobox"
+                                    value={1}
+                                    onChange={(e) => setUserType(parseInt(e.target.value, 10))}
+                                    required
+                                    />
+                                    <label htmlFor="enterprise">Empresa</label>
+                                </div>
+                            </div>
+                            <br/>
                             <label htmlFor="email">E-MAIL:</label>
                                 <input
                                     type="email"

@@ -1,10 +1,9 @@
-.signInGoogle {
-    background-color: white;
-    
-}
 .offscreen{
     display: none;
 }
 .instructions{
     display: block;
+}
+.radiobox{
+    transform: scale(0.2);
 }
