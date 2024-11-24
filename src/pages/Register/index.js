@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import './register.css';
 import { useNavigate } from "react-router-dom";
 import { AuthEmailContext } from "../../contexts/authEmail";
+import InputMask from 'react-input-mask';
 
 const EMAIL_REGEX = /^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
@@ -18,6 +19,9 @@ export const Register = () => {
     const navigate = useNavigate();
     const errRef = useRef();
     const emailRef = useRef();
+
+    const [cnpj, setCnpj] = useState('');
+    const [cpf, setCpf] = useState('');
 
     const [email, setEmail] = useState('');
     const [validName, setValidName] = useState(false);
@@ -37,6 +41,11 @@ export const Register = () => {
 
     const [loading, setLoading] = useState(false);
     const [errMsg, setErrMsg] = useState('');
+    const [selectedValue, setSelectedValue] = useState(null);
+
+    const handleRadioChange = (event) => {
+        setSelectedValue(event.target.value);
+      };
 
     useEffect(() => {
         emailRef.current.focus();
@@ -96,21 +105,116 @@ export const Register = () => {
     return(
         <>
         <PageNavegation></PageNavegation>
-        <div class="container-fluid">
+        <div class="container-fluid register">
             <div class="row">
                 <div class="col-sm-3"></div>
                 <div class="col-sm-6">
                     <div class="box bg-grey">
                         <form onSubmit={handleSubmit}>
-                        <h3 style={{padding: "15px"}}>CADASTRO</h3>
+                        <h3>CADASTRO</h3>
+                        <hr className="hr_Title"/>
                         <p>        
                             <span className="line">
                                 Você já é um Junker? <a href="login">Entrar</a><br/>
                             </span>
                         </p>
-                        <hr style={{width:"40%"}}/>
+                        
                         <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"} aria-live="assertive">{errMsg}</p>
-                        {errMsgPOST && <p style={{ color: "red" }}>{errMsgPOST}</p>}
+                        {errMsgPOST && <p className="errMsgPOST">{errMsgPOST}</p>}
+                        <hr/>
+                        <label htmlFor="userType">SELECIONE O SEU TIPO DE CONTA:</label>
+                        <div className="row">
+                                <div className="col-sm-6">
+                                    <input
+                                    type="radio"
+                                    id="client"
+                                    name="user_type"
+                                    className="form-control radiobox"
+                                    value={0}
+                                    checked={selectedValue === '0'}
+                                    onChange={handleRadioChange}
+                                    />
+                                    <label htmlFor="client">CLIENTE</label>
+                                </div>
+                                <div className="col-sm-6">
+                                    <input
+                                    type="radio"
+                                    id="enterprise"
+                                    name="user_type"
+                                    className="form-control radiobox"
+                                    value={1}
+                                    checked={selectedValue === '1'}
+                                    onChange={handleRadioChange}
+                                    />
+                                    <label htmlFor="enterprise">EMPRESA</label>
+                                </div>
+                                
+                        </div>
+                        <hr/>
+                        { selectedValue === '0' && (
+                        <div className="row user_row">
+                        <br/>
+                            <label htmlFor="subname">CPF:</label>
+                            <InputMask
+                                id="cpf"
+                                className="form-control register_input"
+                                mask="999.999.999-99"
+                                value={cpf}
+                                onChange={(e) => setCpf(e.target.value.replace(/\D/g, ''))}
+                                placeholder="Digite o CPF (999.999.999-99)"
+                            >
+                                {(inputProps) => <input {...inputProps} />}
+                            </InputMask><br/>
+                            <div className="col-sm-1"></div>
+                            <div className="col-sm-5">
+                                <label htmlFor="name">NOME:</label>
+                                <input
+                                type="text"
+                                id="name"
+                                name="name"
+                                className="form-control register_input"
+                                placeholder="Digite o seu nome"
+                                /><br/>
+                            </div>
+                            <div className="col-sm-5">
+                                <label htmlFor="subname">SOBRENOME:</label>
+                                <input
+                                type="text"
+                                id="subname"
+                                name="subname"
+                                className="form-control register_input"
+                                placeholder="Digite o seu sobrenome"
+                                />
+                            </div>
+                            <div className="col-sm-1"></div>
+                        </div>
+                        )}
+
+                        { selectedValue === '1' && (
+                        <div className="row enterprise_row">
+                        <br/>
+                            <label htmlFor="subname">CNPJ:</label>
+                            <InputMask
+                                id="cnpj"
+                                mask="99.999.999/9999-99"
+                                className="form-control register_input"
+                                value={cnpj}
+                                onChange={(e) => setCnpj(e.target.value.replace(/\D/g, ''))}
+                                placeholder="Digite o CNPJ (99.999.999/9999-99)"
+                            >
+                                {(inputProps) => <input {...inputProps} />}
+                            </InputMask><br/>
+                                <label htmlFor="name">NOME DA EMPRESA:</label>
+                                <input
+                                type="text"
+                                id="name"
+                                name="name"
+                                className="form-control register_input"
+                                placeholder="Digite o nome da empresa"
+                                /><br/>
+                        </div>
+                        )}
+
                         <div class="row">
                                 <label htmlFor="email">
                                     E-MAIL:
@@ -124,7 +228,7 @@ export const Register = () => {
                                 <input 
                                     type="email" 
                                     id="email"
-                                    class="form-control login-input"
+                                    class="form-control register_input"
                                     placeholder="Digite seu e-mail"
                                     ref={emailRef}
                                     autoComplete="off"
@@ -154,7 +258,7 @@ export const Register = () => {
                                 <input 
                                     type="username" 
                                     id="username"
-                                    class="form-control login-input"
+                                    class="form-control register_input"
                                     placeholder="Digite seu usuário"
                                     autoComplete="off"
                                     onChange={(e) => setUsername(e.target.value)}
@@ -183,7 +287,7 @@ export const Register = () => {
                                     type="password"
                                     id="password"
                                     placeholder="Digite sua senha" 
-                                    class="form-control login-input"
+                                    class="form-control register_input"
                                     onChange={(e) => setPwd(e.target.value)}
                                     required
                                     aria-invalid={validPwd ? "false" : "true"}
@@ -216,7 +320,7 @@ export const Register = () => {
                                     type="password"
                                     id="confirm_pwd"
                                     placeholder="Confirme sua senha"
-                                    class="form-control login-input"
+                                    class="form-control register_input"
                                     onChange={(e) => setMatchPwd(e.target.value)}
                                     required
                                     aria-invalid={validMatch ? "false" : "true"}
@@ -230,7 +334,7 @@ export const Register = () => {
                                 </p>
                                 <br/>
 
-                                <button disabled={loading || !validName || !validPwd || !validMatch || !validUsername}>
+                                <button disabled={loading || !validName || !validPwd || !validMatch || !validUsername} className="form-control register_button">
                                     {loading ? "Carregando..." : "Registrar"}
                                 </button>
 

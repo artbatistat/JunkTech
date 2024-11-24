@@ -183,16 +183,7 @@ body {
     text-align: center;
     font-family: Montserrat, sans-serif;
   }
-  .login-input{
-    width: 80%;
-    align-items: center;
-    position:relative;
-    margin-left: 10%;
-  }
-  .login-button{
-    width: 30%;
-    margin: auto;
-    font-size: large;
-  }
+
+
 
     

@@ -1,0 +1,25 @@
+.help .box{
+        margin-top: 20px;
+}
+.help .chat_box{
+        text-align: center;
+        align-items: center;
+        place-items: center;
+}
+.help .FAQ_list{
+    text-align: left;
+}
+
+.help .main_help{
+    background-color: rgba(246,246,246);
+    border-radius: 15px;
+}
+
+.help .hr_Title{
+    width:40%;
+    border: 0.1px solid rgba(244,81,30,0.2);
+}
+
+.help .main_help hr{
+    width: 60%;
+}

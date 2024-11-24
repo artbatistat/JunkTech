@@ -3,6 +3,7 @@ import { Navigate } from "react-router-dom";
 import PageFooter from "../../layout/PageFooter";
 import PageNavegation from "../../layout/PageNavegation";
 import { AuthEmailContext } from "../../contexts/authEmail";
+import "./login.css"
 
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 const PWD_CHECK = /^.{8,24}$/;
@@ -59,15 +60,15 @@ export const Login = () => {
     return (
         <>
             <PageNavegation />
-            <div className="container-fluid">
+            <div className="container-fluid login">
                 <div className="row">
                     <div className="col-sm-3"></div>
                     <div className="col-sm-6">
                         <div className="box bg-grey">
-                            <h3 style={{ padding: "15px" }}>LOGIN</h3>
-                            <hr style={{ width:"30%" }}/>
-                            {errMsgPOST && <p style={{ color: "red" }}>{errMsgPOST}</p>}
-                            {errMsg && !validPwd &&<p style={{ color: "red" }}>{errMsg}</p>}
+                            <h3>LOGIN</h3>
+                            <hr className="hr_Title"/>
+                            {errMsgPOST && <p className="errMsg">{errMsgPOST}</p>}
+                            {errMsg && !validPwd &&<p className="errMsg">{errMsg}</p>}
                             <form>
                             <div className="row">
                                 <div className="col-sm-6">
@@ -75,24 +76,24 @@ export const Login = () => {
                                     type="radio"
                                     id="client"
                                     name="user_type"
-                                    className="radiobox"
+                                    className="form-control radiobox"
                                     value={0}
                                     onChange={(e) => setUserType(parseInt(e.target.value, 10))}
                                     required
                                     />
-                                    <label htmlFor="client">Cliente</label>
+                                    <label htmlFor="client">CLIENTE</label>
                                 </div>
                                 <div className="col-sm-6">
                                     <input
                                     type="radio"
                                     id="enterprise"
                                     name="user_type"
-                                    className="radiobox"
+                                    className="form-control radiobox"
                                     value={1}
                                     onChange={(e) => setUserType(parseInt(e.target.value, 10))}
                                     required
                                     />
-                                    <label htmlFor="enterprise">Empresa</label>
+                                    <label htmlFor="enterprise">EMPRESA</label>
                                 </div>
                             </div>
                             <br/>
@@ -100,7 +101,7 @@ export const Login = () => {
                                 <input
                                     type="email"
                                     id="email"
-                                    className="form-control login-input"
+                                    className="form-control login_input"
                                     ref={emailRef}
                                     placeholder="Digite seu e-mail"
                                     autoComplete="off"
@@ -112,7 +113,7 @@ export const Login = () => {
                                     type="password"
                                     id="password"
                                     placeholder="Digite sua senha"
-                                    className="form-control login-input"
+                                    className="form-control login_input"
                                     onChange={(e) => setPwd(e.target.value)}
                                     required
                                     aria-invalid={checkPwd ? "false" : "true"}
@@ -124,13 +125,12 @@ export const Login = () => {
                                     A senha deve conter no mínimo 8 caracteres.
                                 </p>
                                 <br/>
-                                <a href="register">
-                                    <p>
-                                        Ainda não se cadastrou? Clique aqui e se torne um Junker
-                                    </p>
+                                <p>Ainda não se cadastrou? </p>
+                                <a href="register" className="register_button">
+                                    <p>CLIQUE AQUI E SE TORNE UM JUNKER</p>
                                 </a>
-                                <button disabled={loading || !checkPwd} onClick={handleSubmit} className="form-control login-button">
-                                    {loading ? "Carregando..." : "Entrar"}
+                                <button disabled={loading || !checkPwd} onClick={handleSubmit} className={"form-control login_button"} >
+                                    {loading ? "Carregando..." : "ENTRAR"}
                                 </button>
                                 <br />
                             </form>

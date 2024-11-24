@@ -1,23 +1,37 @@
 import React from "react";
 import ChatBot from "react-simple-chatbot";
 import { ThemeProvider } from "styled-components";
+import photo from "./img/garbage.png"
 
 const theme = {
-  background: "#f5f8fb",
-  fontFamily: "Arial, Helvetica, sans-serif",
-  headerBgColor: "#0078d7",
+  background: "rgba(246,246,246)",
+  fontFamily: "Host Grotesk, sans-serif",
+  headerBgColor: "rgba(244,81,30)",
   headerFontColor: "#fff",
   headerFontSize: "15px",
-  botBubbleColor: "#0078d7",
+  botBubbleColor: "rgba(244,81,30)",
   botFontColor: "#fff",
-  userBubbleColor: "#fff",
-  userFontColor: "#4a4a4a",
+  userBubbleColor: "rgba(244,81,30,0.6)",
+  userFontColor: "#fff",
 };
+
+const CustomHeader = () => (
+  <div style={{ 
+    display: 'flex', 
+    alignItems: 'center', 
+    justifyContent: 'space-between', 
+    padding: '10px', 
+    backgroundColor: 'rgba(244,81,30)',
+    color: '#fff'
+  }}>
+    <h3 style={{ margin: 0 }}>Jubileu</h3>
+  </div>
+)
 
 const steps = [
   {
     id: "1",
-    message: "Olá! Como posso ajudar você?",
+    message: "Olá sou o Jubileu ! Como posso ajudar você?",
     trigger: "2",
   },
   {
@@ -42,7 +56,7 @@ const steps = [
 const HelpChatbot = () => {
   return (
     <ThemeProvider theme={theme}>
-      <ChatBot steps={steps} />
+      <ChatBot steps={steps} headerComponent={<CustomHeader/>} botAvatar={photo} />
     </ThemeProvider>
   );
 };

@@ -1,9 +1,75 @@
-.offscreen{
+@import url("https://fonts.googleapis.com");
+@import url("https://fonts.gstatic.com");
+@import url("https://fonts.googleapis.com/css2?family=Host+Grotesk:ital,wght@0,300..800;1,300..800&display=swap");
+
+.login .offscreen{
     display: none;
 }
-.instructions{
+.login .instructions{
     display: block;
 }
-.radiobox{
-    transform: scale(0.2);
+.login .radiobox{
+    transform: scale(0.4);
+    box-shadow: none !important;
+    accent-color: #f4511e;
+    border: 1px solid #f4511e;
+}
+.login .login_button:disabled{
+    width: 30%;
+    margin: auto;
+    font-weight:bold;
+    margin-top:20px !important;
+    background-color: rgba(244,81,30, 0.5) !important;
+    border:0.5px solid rgba(244,81,30, 0.2);
+    font-family: "Host Grotesk", sans-serif;
+    font-optical-sizing: auto;
+    color: white;
+
+}
+.login .login_button{
+    width: 30%;
+    margin: auto;
+    font-weight:bold;
+    margin-top:20px !important;
+    background-color: rgba(244,81,30) !important;
+    border:0.5px solid rgba(244,81,30, 0.2);
+    font-family: "Host Grotesk", sans-serif;
+    font-optical-sizing: auto;
+    color: white;
+
+}
+.login .login_input{
+    width: 80%;
+    align-items: center;
+    position:relative;
+    margin-left: 10%;
+    background-color: transparent !important;
+    border:1px solid rgba(244,81,30, 0.2);
+    font-family: "Host Grotesk", sans-serif;
+    font-optical-sizing: auto;
+  }
+
+.login .errMsg{
+    color: red;
+    font-weight: bold;
+}
+.login h3{
+   padding-top: 30px;
+   letter-spacing:16px;
+}
+.login .hr_Title{
+    width:30%;
+    border: 0.1px solid rgba(244,81,30,0.2);
+}
+.login label{
+    font-family: "Host Grotesk", sans-serif;
+    font-optical-sizing: auto;
+    font-weight:600;
+}
+.login p{
+    font-family: "Host Grotesk", sans-serif;
+    font-optical-sizing: auto;
+}
+.login .register_button{
+    text-decoration: underline;
 }
