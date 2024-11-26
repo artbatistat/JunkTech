@@ -18,7 +18,6 @@ export const Login = () => {
     const [validPwd, setValidPwd] = useState(false);
     const [checkPwd,setCheckPwd] = useState(false);
     const [checkFocus, setCheckFocus] = useState(false);
-    const [userType, setUserType] = useState(null);
 
     const [errMsg, setErrMsg] = useState('');
     const [loading, setLoading] = useState(false);
@@ -70,33 +69,6 @@ export const Login = () => {
                             {errMsgPOST && <p className="errMsg">{errMsgPOST}</p>}
                             {errMsg && !validPwd &&<p className="errMsg">{errMsg}</p>}
                             <form>
-                            <div className="row">
-                                <div className="col-sm-6">
-                                    <input
-                                    type="radio"
-                                    id="client"
-                                    name="user_type"
-                                    className="form-control radiobox"
-                                    value={0}
-                                    onChange={(e) => setUserType(parseInt(e.target.value, 10))}
-                                    required
-                                    />
-                                    <label htmlFor="client">CLIENTE</label>
-                                </div>
-                                <div className="col-sm-6">
-                                    <input
-                                    type="radio"
-                                    id="enterprise"
-                                    name="user_type"
-                                    className="form-control radiobox"
-                                    value={1}
-                                    onChange={(e) => setUserType(parseInt(e.target.value, 10))}
-                                    required
-                                    />
-                                    <label htmlFor="enterprise">EMPRESA</label>
-                                </div>
-                            </div>
-                            <br/>
                             <label htmlFor="email">E-MAIL:</label>
                                 <input
                                     type="email"

@@ -1,12 +1,9 @@
-import { getAuth} from "firebase/auth";
-import { app } from "../services/firebaseConfig";
 import { useEffect, useState,createContext} from "react";
 
 export const AuthEmailContext = createContext({})
 
 export const AuthEmailProvider = ({children}) => {
 
-const auth = getAuth(app);
 const [user,setUser] = useState(null);
 const [errMsgPOST, setErrMsgPOST] = useState('');
 const [errHTTP, setErrHTTP] = useState(false);
@@ -24,13 +21,13 @@ useEffect(() => {
   }
 }, []);
 
-const signInEmailHTTP = async (email,pwd) =>{
+const signInEmailHTTP = async (email,pwd,userType) =>{
 
   try{
           var data = JSON.stringify({
             email: email,
             password: pwd,
-            user_type: 1
+            user_type: userType
           })
 
           const response = await fetch('http://cors-anywhere.herokuapp.com/http://junktech.vercel.app/signin', {
@@ -66,15 +63,20 @@ const signInEmailHTTP = async (email,pwd) =>{
 
 };
 
-const registerUserEmailHTTP = async (email,pwd,username) =>{
+const registerUserEmailHTTP = async (email,pwd,username,name,phone,cnpj_cpf,userType) =>{
 
   try{
           var data = JSON.stringify({
             email: email,
             password: pwd,
             username: username,
-            user_type: 1
+            phone: phone,
+            name: name,
+            cnpj_cpf: cnpj_cpf,
+            user_type: userType
           })
+
+          console.log(data)
 
           const response = await fetch('http://cors-anywhere.herokuapp.com/http://junktech.vercel.app/user', {
             method: 'POST',
@@ -84,16 +86,14 @@ const registerUserEmailHTTP = async (email,pwd,username) =>{
             body: data
           });
           if(response.status === 200 || response.status === 201){
-            const resultPOST = await response.json();
             setErrMsgPOST(`Conta criada com sucesso!`)
             setErrHTTP(true)
           }else if(response.status === 500){
-            setErrMsgPOST(`E-mail já utilizado. Tente outro e-mail.`)
-            console.log(response)
+            setErrMsgPOST(`E-mail ou CPF/CNPJ já utilizado.`)
           }
           else{
-            setErrMsgPOST(`HTTP error! Status: ${response.status}`);
-            console.log(response)
+            const resulterror = await response.json()
+            setErrMsgPOST(`Erro: ${(resulterror["message"])[0]}`);
           }
 
   }catch(error){

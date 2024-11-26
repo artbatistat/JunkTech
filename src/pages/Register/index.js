@@ -4,13 +4,14 @@ import { useRef, useState, useEffect, useContext} from "react";
 import { faCheck,faTimes, faInfoCircle} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import './register.css';
-import { useNavigate } from "react-router-dom";
+import {useNavigate } from "react-router-dom";
 import { AuthEmailContext } from "../../contexts/authEmail";
 import InputMask from 'react-input-mask';
 
 const EMAIL_REGEX = /^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 const USERNAME_REGEX = /^[a-zA-Z0-9.]+$/;
+
 
 export const Register = () => {
 
@@ -19,9 +20,6 @@ export const Register = () => {
     const navigate = useNavigate();
     const errRef = useRef();
     const emailRef = useRef();
-
-    const [cnpj, setCnpj] = useState('');
-    const [cpf, setCpf] = useState('');
 
     const [email, setEmail] = useState('');
     const [validName, setValidName] = useState(false);
@@ -39,13 +37,52 @@ export const Register = () => {
     const [validUsername, setValidUsername] = useState(false);
     const [usernameFocus, setUsernameFocus] = useState(false);
 
+    const [nameForm,setNameForm] = useState('');
+    const [subnameForm,setSubnameForm] = useState('');
+
+    const [phone,setPhone] = useState('');
+    const [validPhone, setValidPhone] = useState(false);
+
+    const [name,setName] = useState('');
+    
+    const [cnpj_cpf, setCnpj_Cpf] = useState('');
+    
+    const [userType,setUserType] = useState(null);
+
+    const [validClient,setValidClient] = useState(false);
+    const [validEnterprise,setValidEnterprise] = useState(false);
+
     const [loading, setLoading] = useState(false);
     const [errMsg, setErrMsg] = useState('');
     const [selectedValue, setSelectedValue] = useState(null);
 
     const handleRadioChange = (event) => {
         setSelectedValue(event.target.value);
+        setCnpj_Cpf('')
+        setName('')
       };
+
+    useEffect(() => {
+        if(cnpj_cpf && name && userType === 1){
+            setValidEnterprise(true)
+        }
+        else if(cnpj_cpf && nameForm && subnameForm && userType === 0){
+            setValidClient(true)
+        }
+        else{
+            setValidClient(false)
+            setValidEnterprise(false)
+        }
+    })
+
+
+    useEffect(() => {
+        if(phone.length === 11){
+            setValidPhone(true)
+        }else{
+            setValidPhone(false)
+        }
+    },[phone])
 
     useEffect(() => {
         emailRef.current.focus();
@@ -72,6 +109,15 @@ export const Register = () => {
         setErrMsg('');
     },[email,pwd,matchPwd,username])
 
+    useEffect(() => {
+      }, [userType]);
+
+    useEffect(() => {
+        if(userType === 0){
+            setName(`${nameForm} ${subnameForm}`)
+        }
+      }, [nameForm,subnameForm]);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -85,7 +131,7 @@ export const Register = () => {
         }else{
 
             try {
-                await registerUserEmailHTTP(email,pwd,username)   
+                await registerUserEmailHTTP(email,pwd,username,name,phone,cnpj_cpf,userType)
             }catch (err){
                 setErrMsg("Falha ao criar conta. Tente novamente.");
                 console.log(err)
@@ -132,7 +178,11 @@ export const Register = () => {
                                     className="form-control radiobox"
                                     value={0}
                                     checked={selectedValue === '0'}
-                                    onChange={handleRadioChange}
+                                    onChange={(e) => {
+                                        handleRadioChange(e);
+                                        setUserType(parseInt(e.target.value, 10)) 
+                                      }}
+                                      required
                                     />
                                     <label htmlFor="client">CLIENTE</label>
                                 </div>
@@ -144,7 +194,11 @@ export const Register = () => {
                                     className="form-control radiobox"
                                     value={1}
                                     checked={selectedValue === '1'}
-                                    onChange={handleRadioChange}
+                                    onChange={(e) => {
+                                        handleRadioChange(e);
+                                        setUserType(parseInt(e.target.value, 10))
+                                      }}
+                                    required
                                     />
                                     <label htmlFor="enterprise">EMPRESA</label>
                                 </div>
@@ -159,8 +213,9 @@ export const Register = () => {
                                 id="cpf"
                                 className="form-control register_input"
                                 mask="999.999.999-99"
-                                value={cpf}
-                                onChange={(e) => setCpf(e.target.value.replace(/\D/g, ''))}
+                                value={cnpj_cpf}
+                                autoComplete="off"
+                                onChange={(e) => setCnpj_Cpf(e.target.value.replace(/\D/g, ''))}
                                 placeholder="Digite o CPF (999.999.999-99)"
                             >
                                 {(inputProps) => <input {...inputProps} />}
@@ -171,9 +226,11 @@ export const Register = () => {
                                 <input
                                 type="text"
                                 id="name"
+                                autoComplete="off"
                                 name="name"
                                 className="form-control register_input"
                                 placeholder="Digite o seu nome"
+                                onChange={(e) => setNameForm(e.target.value)}
                                 /><br/>
                             </div>
                             <div className="col-sm-5">
@@ -182,8 +239,10 @@ export const Register = () => {
                                 type="text"
                                 id="subname"
                                 name="subname"
+                                autoComplete="off"
                                 className="form-control register_input"
                                 placeholder="Digite o seu sobrenome"
+                                onChange={(e) => setSubnameForm(e.target.value)}
                                 />
                             </div>
                             <div className="col-sm-1"></div>
@@ -198,8 +257,9 @@ export const Register = () => {
                                 id="cnpj"
                                 mask="99.999.999/9999-99"
                                 className="form-control register_input"
-                                value={cnpj}
-                                onChange={(e) => setCnpj(e.target.value.replace(/\D/g, ''))}
+                                autoComplete="off"
+                                value={cnpj_cpf}
+                                onChange={(e) => setCnpj_Cpf(e.target.value.replace(/\D/g, ''))}
                                 placeholder="Digite o CNPJ (99.999.999/9999-99)"
                             >
                                 {(inputProps) => <input {...inputProps} />}
@@ -209,6 +269,8 @@ export const Register = () => {
                                 type="text"
                                 id="name"
                                 name="name"
+                                autoComplete="off"
+                                onChange={(e) => setName(e.target.value)}
                                 className="form-control register_input"
                                 placeholder="Digite o nome da empresa"
                                 /><br/>
@@ -244,6 +306,22 @@ export const Register = () => {
                                     Precisa conter de 4 à 24 caracteres. <br/>
                                     Deve começar com uma letra.<br/>
                                 </p>
+                                <br/>
+
+                                <label htmlFor="phone">
+                                    TELEFONE:
+                                </label>
+                                <InputMask
+                                    id="phone"
+                                    mask="(99) 99999-9999"
+                                    className="form-control register_input"
+                                    value={phone}
+                                    autoComplete="off"
+                                    onChange={(e) => setPhone(e.target.value.replace(/\D/g, ''))}
+                                    placeholder="Digite o telefone (99) 99999-9999"
+                                >
+                                {(inputProps) => <input {...inputProps} />}
+                                </InputMask>
                                 <br/>
 
                                 <label htmlFor="username">
@@ -334,7 +412,7 @@ export const Register = () => {
                                 </p>
                                 <br/>
 
-                                <button disabled={loading || !validName || !validPwd || !validMatch || !validUsername} className="form-control register_button">
+                                <button disabled={loading || !validName || !validPwd || !validMatch || !validUsername || !validPhone || !(validClient || validEnterprise) } className="form-control register_button">
                                     {loading ? "Carregando..." : "Registrar"}
                                 </button>
 
