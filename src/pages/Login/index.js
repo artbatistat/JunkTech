@@ -53,7 +53,7 @@ export const Login = () => {
     };
 
     if (signed) {
-        return <Navigate to="/Client" />;
+        return <Navigate to="/CollectionPoints" />;
     }
 
     return (

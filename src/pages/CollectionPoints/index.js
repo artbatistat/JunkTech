@@ -43,7 +43,7 @@ const markers = [
     }
 ];
 
-export const Client = () => {
+export const CollectionPoints = () => {
 
     const { isLoaded } = useLoadScript({
         googleMapsApiKey: "AIzaSyAEY2Hu2axCPl8IVCPz9gmglcaK_jGDUW8"

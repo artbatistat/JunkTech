@@ -31,8 +31,8 @@ const PageFooter = () => {
                     {!signed && (<a href="login" className="login"><p>Login</p></a>)}
 
                     {/*SIGNED STATUS : YES */}
-                    {signed && (<a href="client" className="client"><p>Cliente</p></a>)}     
-                    {signed && (<a href="profile" className="profile"><p>Profile</p></a>)}     
+                    {signed && (<a href="CollectionPoints" className="client"><p>Pontos de coleta</p></a>)}     
+                    {signed && (<a href="profile" className="profile"><p>Perfil</p></a>)}     
                 </div>
                 <div class="col-sm-4">
                     <b>Siga-nos</b>

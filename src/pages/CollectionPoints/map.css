@@ -1,0 +1,44 @@
+#map { height: 180px; }
+.map{
+    display: flex;
+    align-items: center;
+    justify-content: center
+}
+
+.title{
+    text-align: center;
+    color: black;
+}
+
+.collection-points {
+    margin-top: 20px;
+    padding: 10px;
+}
+
+.points-flex {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: space-between; /* Distribui os cartões uniformemente */
+}
+
+.collection-point {
+    flex: 1 1 calc(25% - 20px); /* Cada card ocupa 25% do espaço disponível menos o gap */
+    min-width: 200px; /* Define uma largura mínima para os cartões */
+    max-width: 300px; /* Limita a largura máxima dos cartões */
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.collection-point h3 {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+}
+
+.collection-point p {
+    margin: 5px 0;
+}
