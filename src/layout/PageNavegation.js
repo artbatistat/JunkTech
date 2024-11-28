@@ -1,4 +1,4 @@
-import {React, useContext} from "react";
+import { React, useContext } from "react";
 import { AuthEmailContext } from "../contexts/authEmail";
 
 const PageNavegation = () => {
@@ -25,8 +25,8 @@ const PageNavegation = () => {
                     {!signed && (<li><a href="login" className="login">LOGIN</a></li>)}
 
                     {/*SIGNED STATUS : YES */}
-                    {signed && (<li><a href="CollectionPoints" className="client">Pontos de Coleta</a></li>)}     
-                    {signed && (<li><a href="profile" className="profile">Perfil</a></li>)}     
+                    {signed && (<li><a href="CollectionPoints" className="client">PONTOS DE COLETA</a></li>)}     
+                    {signed && (<li><a href="profile" className="profile">PERFIL</a></li>)}     
                     {signed && (<li><a onClick={signOutEmail} className="logout">LOGOUT</a></li>)} 
                 </ul>
                 </div>

@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
-import "../js/utils"
 import { AuthEmailContext } from "../contexts/authEmail";
+import "../js/utils";
 
 const PageFooter = () => {
 
@@ -31,7 +31,7 @@ const PageFooter = () => {
                     {!signed && (<a href="login" className="login"><p>Login</p></a>)}
 
                     {/*SIGNED STATUS : YES */}
-                    {signed && (<a href="CollectionPoints" className="client"><p>Pontos de coleta</p></a>)}     
+                    {signed && (<a href="CollectionPoints" className="client"><p>PONTOS DE COLETA</p></a>)}     
                     {signed && (<a href="profile" className="profile"><p>Perfil</p></a>)}     
                 </div>
                 <div class="col-sm-4">
