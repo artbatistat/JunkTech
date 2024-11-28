@@ -11,13 +11,21 @@ export const Profile = () => {
     const {user} = useContext(AuthEmailContext)
 
     console.log(user)
+
+    if (!user) {
+        return '';
+    }
+
     return(
         <>
+     
         <PageNavegation></PageNavegation>
+           
         <br/><h1>Profile Page</h1>
         <h3>Bem-vindo {user.username}</h3>
 
-        <PageFooter></PageFooter>
+
+        <PageFooter></PageFooter> 
         </>
     )
 }
