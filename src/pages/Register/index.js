@@ -56,6 +56,8 @@ export const Register = () => {
     const [errMsg, setErrMsg] = useState('');
     const [selectedValue, setSelectedValue] = useState(null);
 
+    const [validCNPJ_CPF,setValidCNPJ_CPF] = useState('');
+
     const handleRadioChange = (event) => {
         setSelectedValue(event.target.value);
         setCnpj_Cpf('')
@@ -75,7 +77,6 @@ export const Register = () => {
         }
     })
 
-
     useEffect(() => {
         if(phone.length === 11){
             setValidPhone(true)
@@ -83,6 +84,35 @@ export const Register = () => {
             setValidPhone(false)
         }
     },[phone])
+
+    useEffect(() => {
+        const validarCPF = async () => {
+          if (!cnpj_cpf) return; // Evita chamada se CPF estiver vazio
+          
+          const url = `https://api.invertexto.com/v1/validator?token=16314%7CBiKu5AlI5CKCMeNZ5tCroF4Eo4rpDKVm&value=${cnpj_cpf}`;
+          
+          try {
+            const response = await fetch(url, {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+              }
+            });
+    
+            if (!response.ok) {
+              throw new Error(`Erro na API: ${response.statusText}`);
+            }
+    
+            const data = await response.json();
+            setValidCNPJ_CPF(data.valid); 
+          } catch (error) {
+            setErrMsg(error.message);
+          }
+        };
+    
+        validarCPF();
+      }, [cnpj_cpf]);
+
 
     useEffect(() => {
         emailRef.current.focus();
@@ -208,7 +238,15 @@ export const Register = () => {
                         { selectedValue === '0' && (
                         <div className="row user_row">
                         <br/>
-                            <label htmlFor="subname">CPF:</label>
+                            <label htmlFor="subname">
+                                CPF:
+                                <span className={validCNPJ_CPF ? "valid" : "hide"}>
+                                    <FontAwesomeIcon icon={faCheck}/>
+                                </span>
+                                <span className={validCNPJ_CPF || !cnpj_cpf ? "hide" : "invalid"}>
+                                    <FontAwesomeIcon icon={faTimes}/>
+                                </span>
+                            </label>
                             <InputMask
                                 id="cpf"
                                 className="form-control register_input"
@@ -252,7 +290,15 @@ export const Register = () => {
                         { selectedValue === '1' && (
                         <div className="row enterprise_row">
                         <br/>
-                            <label htmlFor="subname">CNPJ:</label>
+                            <label htmlFor="subname">
+                                CNPJ:
+                                <span className={validCNPJ_CPF ? "valid" : "hide"}>
+                                    <FontAwesomeIcon icon={faCheck}/>
+                                </span>
+                                <span className={validCNPJ_CPF || !cnpj_cpf ? "hide" : "invalid"}>
+                                    <FontAwesomeIcon icon={faTimes}/>
+                                </span>
+                            </label>
                             <InputMask
                                 id="cnpj"
                                 mask="99.999.999/9999-99"
@@ -412,7 +458,7 @@ export const Register = () => {
                                 </p>
                                 <br/>
 
-                                <button disabled={loading || !validName || !validPwd || !validMatch || !validUsername || !validPhone || !(validClient || validEnterprise) } className="form-control register_button">
+                                <button disabled={loading || !validName || !validPwd || !validMatch || !validUsername || !validCNPJ_CPF || !validPhone || !(validClient || validEnterprise) } className="form-control register_button">
                                     {loading ? "Carregando..." : "Registrar"}
                                 </button>
 

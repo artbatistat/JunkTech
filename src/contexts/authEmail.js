@@ -30,7 +30,7 @@ const signInEmailHTTP = async (email,pwd,userType) =>{
             user_type: userType
           })
 
-          const response = await fetch('http://cors-anywhere.herokuapp.com/http://junktech.vercel.app/signin', {
+          const response = await fetch('https://junktech.vercel.app/signin', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
