@@ -25,3 +25,11 @@ export const PrivateRouteEnterprise = ({ children }) => {
 
     return children;
 };
+
+export const PrivateRouteShared = ({ children }) => {
+    const { signed } = useContext(AuthEmailContext);
+
+    if (!signed) return <Navigate to="/Login" />;
+
+    return children;
+};
