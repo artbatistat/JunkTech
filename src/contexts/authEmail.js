@@ -7,6 +7,7 @@ export const AuthEmailProvider = ({children}) => {
 const [user,setUser] = useState(null);
 const [errMsgPOST, setErrMsgPOST] = useState('');
 const [errHTTP, setErrHTTP] = useState(false);
+const [user_Type, setUser_Type] = useState(null);
 
 const [signed, setSigned] = useState(() => {
   const storedValue = sessionStorage.getItem("signed");
@@ -21,13 +22,12 @@ useEffect(() => {
   }
 }, []);
 
-const signInEmailHTTP = async (email,pwd,userType) =>{
+const signInEmailHTTP = async (email,pwd) =>{
 
   try{
           var data = JSON.stringify({
             email: email,
-            password: pwd,
-            user_type: userType
+            password: pwd
           })
 
           const response = await fetch('https://junktech.vercel.app/signin', {
@@ -45,6 +45,7 @@ const signInEmailHTTP = async (email,pwd,userType) =>{
             sessionStorage.setItem("@AuthFirebase:token",token);
             sessionStorage.setItem("@AuthFirebase:user",tokenPayload);
             sessionStorage.setItem("signed", "true");
+            setUser_Type(JSON.parse(tokenPayload).user_type)
             setSigned(true);
           }
           else if(response.status === 401){                            
@@ -78,7 +79,7 @@ const registerUserEmailHTTP = async (email,pwd,username,name,phone,cnpj_cpf,user
 
           console.log(data)
 
-          const response = await fetch('http://cors-anywhere.herokuapp.com/http://junktech.vercel.app/user', {
+          const response = await fetch('https://junktech.vercel.app/user', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -107,16 +108,18 @@ const signOutEmail = () => {
   sessionStorage.removeItem("@AuthFirebase:token");
   sessionStorage.removeItem("@AuthFirebase:user");
   sessionStorage.removeItem("signed");
+  setUser_Type(null)
   setSigned(false);
 };
 
   useEffect(() => {
     console.log("Signed atualizado no Context:", signed);
+    
 }, [signed]);
 
 
 return (
-  <AuthEmailContext.Provider value={{ signInEmailHTTP, signOutEmail , registerUserEmailHTTP, signed, errMsgPOST , errHTTP , user}}>
+  <AuthEmailContext.Provider value={{ signInEmailHTTP, signOutEmail , registerUserEmailHTTP, signed, errMsgPOST , errHTTP , user, user_Type}}>
     {children}
   </AuthEmailContext.Provider>
 )};

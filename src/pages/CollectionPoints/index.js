@@ -1,6 +1,5 @@
 import { GoogleMap, InfoWindow, Marker, useLoadScript } from "@react-google-maps/api";
-import { useContext, useState } from "react";
-import { AuthGoogleContext } from "../../contexts/authGoogle";
+import { useState } from "react";
 import PageFooter from "../../layout/PageFooter";
 import PageNavegation from "../../layout/PageNavegation";
 import './map.css';

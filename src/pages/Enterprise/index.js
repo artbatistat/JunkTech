@@ -11,7 +11,7 @@ import PageNavegation from "../../layout/PageNavegation";
     }}
 />;
 
-export const Profile = () => {
+export const Enterprise = () => {
     const { user } = useContext(AuthEmailContext)
 
     if (!user) {
