@@ -72,7 +72,6 @@ export const CollectionPoints = () => {
 
     const [transformedPoints, setTransformedPoints] = useState([]);
     const [activeMarker, setActiveMarker] = useState(null);
-
     useEffect(() => {
         const fetchData = async () => {
             const points = await transformPickUpPoints();
