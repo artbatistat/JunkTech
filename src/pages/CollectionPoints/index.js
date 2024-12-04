@@ -5,20 +5,51 @@ import PageFooter from "../../layout/PageFooter";
 import PageNavegation from "../../layout/PageNavegation";
 import './map.css';
 
+async function getPickUpPoints() {
+    try {
+        const response = await fetch('http://cors-anywhere.herokuapp.com/http://junktech.vercel.app/pickup-point', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error('Erro na requisição: ' + response.status);
+        }
+
+        const data = await response.json();
+        console.log(data)
+        return data;
+    } catch (error) {
+        console.error('Erro na requisição:', error);
+    }
+}
+
+
+const pickUpPoints = getPickUpPoints()
+// const transformedPoints = pickUpPoints.map((point, index) => {
+//     const [lat, lng] = point.geolocation.split(", ").map(Number);
+//     return {
+//         id: index + 1,
+//         name: `Point ${index + 1}`, // Nome genérico, substitua conforme necessário
+//         position: { lat, lng },
+//         address: `Endereço ${index + 1}`, // Endereço genérico, remova se não precisar
+//     };
+// });
+
 const markers = [
     {
         id: 1,
         name: "Emile",
         position: { lat: -19.993362, lng: -44.181484 },
         address: "Endereço 1",
-        phone: "31 9 3276-2947"
     },
     {
         id: 2,
         name: "Br Ambiental",
         position: { lat: -19.962945, lng: -44.138216 },
         address: "Endereço 2",
-        phone: "31 9 3276-2947"
     },
     {
         id: 3,
@@ -99,11 +130,10 @@ export const CollectionPoints = () => {
                 <div className="collection-points">
                     <h2>Detalhes dos Pontos de Coleta</h2>
                     <div className="points-flex">
-                        {markers.map(({ id, name, address, phone }) => (
+                        {markers.map(({ id, name, address }) => (
                             <div key={id} className="collection-point">
                                 <h3>{name}</h3> <br />
                                 <p><strong>Endereço: </strong> <br /> {address}</p>
-                                <p><strong>Telefone:</strong><br /> {phone}</p>
                             </div>
                         ))}
                     </div>

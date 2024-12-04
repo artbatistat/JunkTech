@@ -8,22 +8,35 @@ import './map.css';
 
 export const Profile = () => {
 
-   async  function setPosition(position){
-    console.log(position)
-    console.log(user)
-        // var data = JSON.stringify({
-        //     email: email,
-        //     password: pwd,
-        //     user_type: userType
-        //   })
+    async function setPosition(position) {
+        const stringPosition = `${position.lat}, ${position.lng}`;
 
-        //   const response = await fetch('http://cors-anywhere.herokuapp.com/http://junktech.vercel.app/pickup-point', {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //     },
-        //     body: data
-        //   });
+        const token = sessionStorage.getItem("@AuthFirebase:token");
+        if (!token) {
+            console.error("Token não encontrado!");
+            return;
+        }
+
+        const data = JSON.stringify({
+            geolocation: stringPosition,
+            owner_id: user.sub
+        });
+
+        const response = await fetch('http://cors-anywhere.herokuapp.com/http://junktech.vercel.app/pickup-point', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${JSON.parse(token)}`,
+            },
+            body: data
+        });
+
+        if (response.ok) {
+            const result = await response.json();
+            console.log("Requisição bem-sucedida:", result);
+        } else {
+            console.error("Erro na requisição:", response.status, response.statusText);
+        }
     }
 
     const position = { lat: -19.957054, lng: -44.034900 }
@@ -32,7 +45,7 @@ export const Profile = () => {
 
     const onMapLoad = (map) => {
         setMap(map);
-      };
+    };
 
     const [searchBox, setSeatchBox] = React.useState(null);
 
@@ -83,7 +96,7 @@ export const Profile = () => {
                     >
 
                         <StandaloneSearchBox onLoad={onLoad} onPlacesChanged={onPlacesChanged}>
-                            <input className="address" placeholder="Digite um endereço" type="text"/>
+                            <input className="address" placeholder="Digite um endereço" type="text" />
 
                         </StandaloneSearchBox>
 

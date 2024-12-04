@@ -42,6 +42,7 @@ const signInEmailHTTP = async (email,pwd,userType) =>{
             const token = JSON.stringify(resultPOST.access_token)
             const arrayToken = token.split('.');
             const tokenPayload = JSON.stringify(JSON.parse(atob(arrayToken[1])));
+            console.log(tokenPayload)
             sessionStorage.setItem("@AuthFirebase:token",token);
             sessionStorage.setItem("@AuthFirebase:user",tokenPayload);
             sessionStorage.setItem("signed", "true");
@@ -75,8 +76,6 @@ const registerUserEmailHTTP = async (email,pwd,username,name,phone,cnpj_cpf,user
             cnpj_cpf: cnpj_cpf,
             user_type: userType
           })
-
-          console.log(data)
 
           const response = await fetch('http://cors-anywhere.herokuapp.com/http://junktech.vercel.app/user', {
             method: 'POST',
