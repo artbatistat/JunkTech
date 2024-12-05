@@ -40,7 +40,7 @@
 }
 .login .login_input{
     width: 80%;
-    align-items: center;
+    align-items: left;
     position:relative;
     margin-left: 10%;
     background-color: transparent !important;
@@ -62,9 +62,11 @@
     border: 0.1px solid rgba(244,81,30,0.2);
 }
 .login label{
-    font-family: "Host Grotesk", sans-serif;
     font-optical-sizing: auto;
-    font-weight:600;
+    font-weight: 600;
+    padding-left: 10%;
+    display: flex;
+    padding-top: 15px;
 }
 .login p{
     font-family: "Host Grotesk", sans-serif;

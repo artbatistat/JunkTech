@@ -5,6 +5,8 @@ import "../js/utils";
 const PageFooter = () => {
 
     const {signed} = useContext(AuthEmailContext)
+    const user = JSON.parse(sessionStorage.getItem("@AuthFirebase:user"));
+    const user_Type = user?.user_type;
 
     return (
         <>
@@ -30,8 +32,10 @@ const PageFooter = () => {
                     {!signed && (<a href="register"><p>Se torne um Junker</p></a>)}
                     {!signed && (<a href="login" className="login"><p>Login</p></a>)}
 
+                    
                     {/*SIGNED STATUS : YES */}
-                    {signed && (<a href="CollectionPoints" className="client"><p>PONTOS DE COLETA</p></a>)}     
+                    {signed && user_Type === 1 && (<a href="Enterprise" className="enterprise"><p>Pontos de coleta</p></a>)}
+                    {signed && user_Type === 0 && (<a href="CollectionPoints" className="client"><p>Pontos de coleta</p></a>)}     
                     {signed && (<a href="profile" className="profile"><p>Perfil</p></a>)}     
                 </div>
                 <div class="col-sm-4">
