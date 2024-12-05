@@ -198,7 +198,7 @@ export const Register = () => {
                         <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"} aria-live="assertive">{errMsg}</p>
                         {errMsgPOST && <p className="errMsgPOST">{errMsgPOST}</p>}
                         <hr/>
-                        <label htmlFor="userType">SELECIONE O SEU TIPO DE CONTA:</label>
+                        <label htmlFor="userType" className="notlabel">SELECIONE O SEU TIPO DE CONTA:</label>
                         <div className="row">
                                 <div className="col-sm-6">
                                     <input
@@ -214,7 +214,7 @@ export const Register = () => {
                                       }}
                                       required
                                     />
-                                    <label htmlFor="client">CLIENTE</label>
+                                    <label htmlFor="client" className="notlabel">CLIENTE</label>
                                 </div>
                                 <div className="col-sm-6">
                                     <input
@@ -230,7 +230,7 @@ export const Register = () => {
                                       }}
                                     required
                                     />
-                                    <label htmlFor="enterprise">EMPRESA</label>
+                                    <label htmlFor="enterprise" className="notlabel">EMPRESA</label>
                                 </div>
                                 
                         </div>

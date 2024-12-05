@@ -72,3 +72,16 @@
     margin-bottom: 30px;
 
 }
+.register label{
+    font-optical-sizing: auto;
+    font-weight: 600;
+    padding-left: 10%;
+    display: flex;
+    padding-top: 15px;
+}
+.register .notlabel{
+    font-optical-sizing: auto !important;
+    padding-left: 0% !important;
+    font-weight: 600 !important;
+    display: block !important;
+}
