@@ -1,15 +1,47 @@
+import React, { useState, useContext } from "react";
 import { GoogleMap, LoadScript, Marker, StandaloneSearchBox } from "@react-google-maps/api";
-import React, { useContext } from "react";
 import { AuthEmailContext } from "../../contexts/authEmail";
 import PageFooter from "../../layout/PageFooter";
 import PageNavegation from "../../layout/PageNavegation";
-import './map.css';
-
+import "./map.css";
 
 export const Enterprise = () => {
+    const [map, setMap] = useState(null);
+    const [markers, setMarkers] = useState([]);
+    const [searchBox, setSearchBox] = useState(null);
+    const [location, setLocation] = useState(null);
+    const [successMessage, setSuccessMessage] = useState("");
+    const { user } = useContext(AuthEmailContext);
 
-    async function setPosition(position) {
-        const stringPosition = `${position.lat}, ${position.lng}`;
+    if (!user) return null;
+    const position = { lat: -19.912998, lng: -43.940933 };
+
+    const onMapLoad = (map) => setMap(map);
+
+    const onSearchBoxLoad = (ref) => setSearchBox(ref);
+
+    const onPlacesChanged = () => {
+        if (!searchBox) return;
+
+        const places = searchBox.getPlaces();
+        const place = places?.[0];
+        if (!place) return;
+
+        const loc = {
+            lat: place.geometry.location.lat(),
+            lng: place.geometry.location.lng(),
+        };
+
+        setLocation(loc);
+        map.panTo(loc);
+        setMarkers([loc]);
+    };
+
+    const sendLocation = async () => {
+        if (!location) {
+            alert("Por favor, selecione um local.");
+            return;
+        }
 
         const token = sessionStorage.getItem("@AuthFirebase:token");
         if (!token) {
@@ -18,93 +50,68 @@ export const Enterprise = () => {
         }
 
         const data = JSON.stringify({
-            geolocation: stringPosition,
-            owner_id: user.sub
+            geolocation: `${location.lat}, ${location.lng}`,
+            owner_id: user.sub,
         });
 
-        const response = await fetch('http://cors-anywhere.herokuapp.com/http://junktech.vercel.app/pickup-point', {
+        const response = await fetch('http://junktech.vercel.app/pickup-point', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${JSON.parse(token)}`,
             },
-            body: data
+            body: data,
         });
 
         if (response.ok) {
-            const result = await response.json();
-            console.log("Requisição bem-sucedida:", result);
+            setSuccessMessage("Localização salva com sucesso!");
+            setTimeout(() => setSuccessMessage(""), 3000);
         } else {
             console.error("Erro na requisição:", response.status, response.statusText);
         }
-    }
-
-    const position = { lat: -19.957054, lng: -44.034900 }
-    const [map, setMap] = React.useState(undefined);
-    const [markers, setMarkers] = React.useState([])
-
-    const onMapLoad = (map) => {
-        setMap(map);
     };
 
-    const [searchBox, setSeatchBox] = React.useState(null);
 
-    const onLoad = (ref) => {
-        setSeatchBox(ref)
-    }
-
-    const onPlacesChanged = () => {
-        const places = searchBox.getPlaces();
-        const place = places[0];
-        const location = {
-            lat: place?.geometry?.location?.lat() || 0,
-            lng: place?.geometry?.location?.lng() || 0
-        }
-
-        setPosition(location)
-
-        map.panTo(location)
-        setMarkers([...markers, location])
-    }
-
-    const { user } = useContext(AuthEmailContext)
-
-    if (!user) {
-        return '';
-    }
 
     return (
         <>
-            <PageNavegation></PageNavegation>
+            <PageNavegation />
 
-            < br /> <h1>Profile Page </h1>
-            < div className="map" >
-                <LoadScript
-                    id="script-loader"
-                    googleMapsApiKey="AIzaSyAEY2Hu2axCPl8IVCPz9gmglcaK_jGDUW8"
-                    libraries={['places']}
-                >
-
-                    <GoogleMap
-                        onLoad={onMapLoad}
-                        mapContainerStyle={{ width: '100%', height: '100%' }
-                        }
-                        center={position}
-                        zoom={15}
+            <div className="map-container">
+                <div className="controls">
+                    <LoadScript
+                        googleMapsApiKey="AIzaSyAEY2Hu2axCPl8IVCPz9gmglcaK_jGDUW8"
+                        libraries={['places']}
                     >
-
-                        <StandaloneSearchBox onLoad={onLoad} onPlacesChanged={onPlacesChanged}>
+                        <StandaloneSearchBox onLoad={onSearchBoxLoad} onPlacesChanged={onPlacesChanged}>
                             <input className="address" placeholder="Digite um endereço" type="text" />
-
                         </StandaloneSearchBox>
+                        <button onClick={sendLocation} className="send-button">Enviar</button>
+                    </LoadScript>
+                </div>
 
-                        {markers.map((marker, index) => (
-                            <Marker key={index} position={marker} />
-                        ))}
-                    </GoogleMap>
-                </LoadScript>
+                {successMessage && <div className="success-message">{successMessage}</div>}
+
+                <div className="map">
+                    <LoadScript
+                        googleMapsApiKey="AIzaSyAEY2Hu2axCPl8IVCPz9gmglcaK_jGDUW8"
+                        libraries={['places']}
+                    >
+                        <GoogleMap
+                            onLoad={onMapLoad}
+                            mapContainerStyle={{ width: '100%', height: '100%' }}
+                            center={position}
+                            zoom={10}
+                        >
+                            {markers.map((marker, index) => (
+                                <Marker key={index} position={marker} />
+                            ))}
+                        </GoogleMap>
+                    </LoadScript>
+                </div>
             </div>
-            <PageFooter></PageFooter>
+
+            <PageFooter />
         </>
-    )
-}
+    );
+};
