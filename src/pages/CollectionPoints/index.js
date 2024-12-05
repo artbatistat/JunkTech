@@ -1,54 +1,84 @@
 import { GoogleMap, InfoWindow, Marker, useLoadScript } from "@react-google-maps/api";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PageFooter from "../../layout/PageFooter";
 import PageNavegation from "../../layout/PageNavegation";
 import './map.css';
 
-const markers = [
-    {
-        id: 1,
-        name: "Emile",
-        position: { lat: -19.993362, lng: -44.181484 },
-        address: "Endereço 1",
-        phone: "31 9 3276-2947"
-    },
-    {
-        id: 2,
-        name: "Br Ambiental",
-        position: { lat: -19.962945, lng: -44.138216 },
-        address: "Endereço 2",
-        phone: "31 9 3276-2947"
-    },
-    {
-        id: 3,
-        name: "Bh Recicla",
-        position: { lat: -19.957054, lng: -44.034900 },
-        address: "Endereço 3",
-        phone: "31 9 3276-2947"
-    },
-    {
-        id: 4,
-        name: "MG Recicla",
-        position: { lat: -19.940838, lng: -44.001605 },
-        address: "Endereço 4",
-        phone: "31 9 3276-2947"
-    },
-    {
-        id: 5,
-        name: "Coletar Reciclagem",
-        position: { lat: -19.929466, lng: -44.054793},
-        address: "Endereço 4",
-        phone: "31 9 3276-2947"
+async function getPickUpPoints() {
+    try {
+        const response = await fetch('http://cors-anywhere.herokuapp.com/http://junktech.vercel.app/pickup-point', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error('Erro na requisição: ' + response.status);
+        }
+
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Erro na requisição:', error);
+        return [];
     }
-];
+}
+
+async function getAddressFromGeolocation(lat, lng) {
+    const googleApiKey = 'AIzaSyAEY2Hu2axCPl8IVCPz9gmglcaK_jGDUW8';
+    const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${googleApiKey}`;
+
+    try {
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error('Erro ao buscar endereço: ' + response.status);
+        }
+        const data = await response.json();
+        if (data.status === 'OK' && data.results.length > 0) {
+            return data.results[0].formatted_address; // Endereço formatado
+        } else {
+            return 'Endereço não encontrado';
+        }
+    } catch (error) {
+        console.error('Erro ao buscar endereço:', error);
+        return 'Erro ao buscar endereço';
+    }
+}
+
+async function transformPickUpPoints() {
+    const pickUpPoints = await getPickUpPoints();
+
+    const transformedPoints = await Promise.all(
+        pickUpPoints.map(async (point, index) => {
+            const [lat, lng] = point.geolocation.split(', ').map(Number);
+            const address = await getAddressFromGeolocation(lat, lng);
+            return {
+                id: index + 1,
+                name: `Point ${index + 1}`, // Nome genérico, substitua conforme necessário
+                position: { lat, lng },
+                address, // Endereço obtido pela API
+            };
+        })
+    );
+
+    return transformedPoints;
+}
 
 export const CollectionPoints = () => {
-
     const { isLoaded } = useLoadScript({
         googleMapsApiKey: "AIzaSyAEY2Hu2axCPl8IVCPz9gmglcaK_jGDUW8"
     });
 
+    const [transformedPoints, setTransformedPoints] = useState([]);
     const [activeMarker, setActiveMarker] = useState(null);
+    useEffect(() => {
+        const fetchData = async () => {
+            const points = await transformPickUpPoints();
+            setTransformedPoints(points);
+        };
+        fetchData();
+    }, []);
 
     const handleActiveMarker = (marker) => {
         if (marker === activeMarker) {
@@ -59,11 +89,12 @@ export const CollectionPoints = () => {
 
     const handleOnLoad = (map) => {
         const bounds = new window.google.maps.LatLngBounds();
-        markers.forEach(({ position }) => bounds.extend(position));
+        transformedPoints.forEach(({ position }) => bounds.extend(position));
         map.fitBounds(bounds);
     };
 
-    if (!isLoaded) return <div>Carregando...</div>;
+    if (!isLoaded) return <div>Carregando mapa...</div>;
+    if (!transformedPoints.length) return <div>Carregando pontos de coleta...</div>;
 
     return (
         <>
@@ -78,7 +109,7 @@ export const CollectionPoints = () => {
                                 onClick={() => setActiveMarker(null)}
                                 mapContainerStyle={{ width: "100%", height: "100%" }}
                             >
-                                {markers.map(({ id, name, position }) => (
+                                {transformedPoints.map(({ id, name, position }) => (
                                     <Marker
                                         key={id}
                                         position={position}
@@ -98,11 +129,10 @@ export const CollectionPoints = () => {
                 <div className="collection-points">
                     <h2>Detalhes dos Pontos de Coleta</h2>
                     <div className="points-flex">
-                        {markers.map(({ id, name, address, phone }) => (
+                        {transformedPoints.map(({ id, name, address }) => (
                             <div key={id} className="collection-point">
                                 <h3>{name}</h3> <br />
                                 <p><strong>Endereço: </strong> <br /> {address}</p>
-                                <p><strong>Telefone:</strong><br /> {phone}</p>
                             </div>
                         ))}
                     </div>

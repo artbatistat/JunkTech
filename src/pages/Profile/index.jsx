@@ -6,7 +6,7 @@ import PageNavegation from "../../layout/PageNavegation";
 import './map.css';
 
 
-export const Enterprise = () => {
+export const Profile = () => {
 
     async function setPosition(position) {
         const stringPosition = `${position.lat}, ${position.lng}`;
@@ -78,6 +78,8 @@ export const Enterprise = () => {
             <PageNavegation></PageNavegation>
 
             < br /> <h1>Profile Page </h1>
+            < h3 > Bem - vindo {user.username} </h3>
+
             < div className="map" >
                 <LoadScript
                     id="script-loader"

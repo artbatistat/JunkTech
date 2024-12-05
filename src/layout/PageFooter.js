@@ -34,7 +34,7 @@ const PageFooter = () => {
 
                     
                     {/*SIGNED STATUS : YES */}
-                    {signed && user_Type === 1 && (<a href="Enterprise" className="enterprise"><p>Empresa</p></a>)}
+                    {signed && user_Type === 1 && (<a href="Enterprise" className="enterprise"><p>Pontos de coleta</p></a>)}
                     {signed && user_Type === 0 && (<a href="CollectionPoints" className="client"><p>Pontos de coleta</p></a>)}     
                     {signed && (<a href="profile" className="profile"><p>Perfil</p></a>)}     
                 </div>
