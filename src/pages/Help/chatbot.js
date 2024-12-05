@@ -43,13 +43,34 @@ const steps = [
   },
   {
     id: "3",
-    message: "Por favor, descreva seu problema.",
-    end: true,
+    message: "Desculpe por isso... Ainda não temos um atendente online para lhe ajudar. Por favor entre em contato no número 0800-888888888 ",
+    trigger:"back_menu",
   },
   {
     id: "4",
     message: "Sobre o que você gostaria de saber?",
-    end: true,
+    trigger: "5",
+  },
+  {
+    id: "5",
+    options:[
+      {value:"cadastro_ponto_coleta", label:"Cadastro de uma novo ponto de coleta",trigger:"6"},
+      {value:"verificar_ponto", label:"Pontos de coleta disponíveis",trigger:"7"},
+    ],
+  },
+  {
+    id: "6",
+    message: "Você deve está cadastrado como empresa no nosso sistema, assim na aba 'Pontos de Coleta' você consiguirá realizar o cadastro com o endereço.",
+    trigger:"back_menu",
+  },
+  {
+    id: "7",
+    message: "Você pode entrar na aba 'Pontos de Coleta' que deverá exibir os pontos disponiveis na sua localidade.",
+    trigger:"back_menu",
+  },
+  {
+    id: "back_menu",
+    options:[{value:"back_menu", label:"Voltar ao inicio",trigger:"2"}]
   },
 ];
 

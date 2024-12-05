@@ -54,7 +54,7 @@ export const Enterprise = () => {
             owner_id: user.sub,
         });
 
-        const response = await fetch('http://junktech.vercel.app/pickup-point', {
+        const response = await fetch('https://junktech.vercel.app/pickup-point', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -86,7 +86,7 @@ export const Enterprise = () => {
                         <StandaloneSearchBox onLoad={onSearchBoxLoad} onPlacesChanged={onPlacesChanged}>
                             <input className="address" placeholder="Digite um endereço" type="text" />
                         </StandaloneSearchBox>
-                        <button onClick={sendLocation} className="send-button">Enviar</button>
+                        <button onClick={sendLocation} className="send-button">Cadastrar</button>
                     </LoadScript>
                 </div>
 

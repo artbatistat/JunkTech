@@ -6,7 +6,7 @@ import './map.css';
 
 async function getPickUpPoints() {
     try {
-        const response = await fetch('http://cors-anywhere.herokuapp.com/http://junktech.vercel.app/pickup-point', {
+        const response = await fetch('https://junktech.vercel.app/pickup-point', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
